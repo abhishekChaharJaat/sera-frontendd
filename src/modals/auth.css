@@ -1,0 +1,172 @@
+/* ── Clerk SignIn/SignUp dark overrides ─────────────────────────── */
+
+.cl-rootBox,
+.cl-cardBox {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.cl-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 4px;
+}
+
+.cl-headerTitle {
+  color: #ececec !important;
+}
+.cl-headerSubtitle {
+  color: rgba(236, 236, 236, 0.4) !important;
+}
+
+.cl-dividerLine {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+.cl-dividerText {
+  color: rgba(236, 236, 236, 0.4) !important;
+}
+
+.cl-socialButtonsBlockButton {
+  background-color: #3a3a3a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+  color: #ececec !important;
+  border-radius: 9999px !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background-color: #444 !important;
+}
+.cl-socialButtonsBlockButtonText {
+  color: #ececec !important;
+}
+
+.cl-formFieldLabel {
+  color: rgba(236, 236, 236, 0.6) !important;
+}
+
+.cl-formFieldInput,
+.cl-input,
+.cl-formFieldInput input,
+.cl-formField input,
+input[class*="cl-"] {
+  background-color: #3a3a3a !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ececec !important;
+  border-radius: 9999px !important;
+  padding: 12px 20px !important;
+  height: auto !important;
+  min-height: 44px !important;
+  box-sizing: border-box !important;
+}
+
+.cl-formFieldInput::placeholder,
+.cl-input::placeholder {
+  color: rgba(236, 236, 236, 0.3) !important;
+}
+
+.cl-formFieldInput:focus,
+.cl-input:focus {
+  border-color: #19c37d !important;
+  box-shadow: 0 0 0 2px rgba(25, 195, 125, 0.2) !important;
+}
+
+.cl-formFieldInput:-webkit-autofill,
+.cl-formFieldInput:-webkit-autofill:hover,
+.cl-formFieldInput:-webkit-autofill:focus,
+.cl-input:-webkit-autofill,
+.cl-input:-webkit-autofill:hover,
+.cl-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #3a3a3a inset !important;
+  -webkit-text-fill-color: #ececec !important;
+  caret-color: #ececec !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+.cl-formFieldInputShowPasswordButton {
+  color: rgba(236, 236, 236, 0.4) !important;
+}
+.cl-formFieldInputShowPasswordButton:hover {
+  color: #ececec !important;
+}
+
+.cl-formButtonPrimary {
+  background-color: #19c37d !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  border-radius: 9999px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: #17b371 !important;
+}
+
+.cl-formFieldAction,
+.cl-footerActionLink,
+.cl-backLink {
+  color: #19c37d !important;
+}
+
+.cl-footerActionText {
+  color: rgba(236, 236, 236, 0.4) !important;
+}
+
+.cl-formFieldErrorText {
+  color: #f87171 !important;
+}
+.cl-formFieldSuccessText {
+  color: #19c37d !important;
+}
+
+.cl-alert {
+  background-color: #3a3a3a !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.cl-alertText {
+  color: #ececec !important;
+}
+
+.cl-footerAction,
+.cl-footer {
+  display: none !important;
+}
+
+.cl-internal-b3fm6y,
+.cl-internal-1dauvpw,
+.cl-footerPages,
+.cl-footerPagesLink,
+.cl-powered-by-clerk,
+.cl-internal-l2l775,
+.cl-internal-pe6vm4,
+.cl-internal-tk30ch,
+.cl-internal-1fpq5at,
+[class*="cl-internal"] a[href*="clerk.com"],
+a[href*="go.clerk.com"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+.cl-userButtonTrigger,
+.cl-userButtonTrigger:focus,
+.cl-userButtonTrigger:focus-visible,
+.cl-userButtonTrigger:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.cl-userButtonAvatarBox,
+.cl-avatarBox.cl-userButtonAvatarBox,
+.cl-avatarImage.cl-userButtonAvatarImage {
+  width: 32px !important;
+  height: 32px !important;
+}

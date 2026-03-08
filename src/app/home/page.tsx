@@ -10,7 +10,7 @@ import { createThread, sendMessage, chatActions } from "@/store/chatSlice";
 import TopNav from "@/components/TopNav";
 import { PAGE } from "@/lib/constants";
 
-export default function Home() {
+export default function HomePage() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [input, setInput] = useState("");
@@ -44,7 +44,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen bg-[#212121]">
-      <TopNav page={PAGE.UNAUTH_HOME} />
+      <TopNav page={PAGE.HOME} />
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 pb-16">
         <div className="w-14 h-14 rounded-full bg-[#19c37d]/20 border border-[#19c37d]/30 flex items-center justify-center mb-6">
           <SparklesIcon className="w-7 h-7 text-[#19c37d]" />

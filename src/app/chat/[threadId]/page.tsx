@@ -3,15 +3,18 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter, useParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 import RenderMessages from "@/components/RenderMessages";
 import ChatBox from "@/components/ChatBox";
 import { RootState, AppDispatch } from "@/store/store";
 import { sendMessage, fetchMessages, chatActions } from "@/store/chatSlice";
 import TopNav from "@/components/TopNav";
+import { PAGE } from "@/lib/constants";
 
 export default function ChatPage() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const { isSignedIn } = useAuth();
   const { threadId } = useParams<{ threadId: string }>();
   const threadData = useSelector((state: RootState) => state.chat.threadData);
   const sendMessageLoading = useSelector(
@@ -36,8 +39,21 @@ export default function ChatPage() {
     if (!trimmed || sendMessageLoading || !threadData) return;
     setInput("");
     const tempMsgId = crypto.randomUUID();
-    dispatch(chatActions.addMessage({ id: tempMsgId, role: "user", content: trimmed, timestamp: Date.now() }));
-    dispatch(sendMessage({ threadId: threadData.thread_id, message: trimmed, tempMsgId }));
+    dispatch(
+      chatActions.addMessage({
+        id: tempMsgId,
+        role: "user",
+        content: trimmed,
+        timestamp: Date.now(),
+      }),
+    );
+    dispatch(
+      sendMessage({
+        threadId: threadData.thread_id,
+        message: trimmed,
+        tempMsgId,
+      }),
+    );
   };
 
   if (fetchMessagesLoading) {
@@ -53,7 +69,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-screen bg-[#212121]">
-      <TopNav />
+      <TopNav page={isSignedIn ? PAGE.CHAT : PAGE.UNAUTH_CHAT} />
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />
       </div>

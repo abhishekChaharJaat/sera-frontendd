@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.0.1",
+    "@clerk/themes": "^2.4.57",
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.11.2",
     "next": "16.1.6",
