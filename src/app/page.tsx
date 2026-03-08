@@ -10,8 +10,10 @@ import { AppDispatch } from "@/store/store";
 import { createThread, sendMessage, chatActions } from "@/store/chatSlice";
 import TopNav from "@/components/TopNav";
 import { PAGE } from "@/lib/constants";
+import { useViewportFix } from "@/hooks/useViewportFix";
 
 export default function Home() {
+  const containerRef = useViewportFix();
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { isLoaded, isSignedIn } = useAuth();
@@ -53,7 +55,7 @@ export default function Home() {
   if (isSignedIn) return null;
 
   return (
-    <div className="flex flex-col h-dvh bg-[#212121]">
+    <div ref={containerRef} className="fixed inset-x-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
       <TopNav page={PAGE.UNAUTH_HOME} />
       <div className="flex-1 flex flex-col items-center justify-center md:px-6">
         <div className="w-full max-w-3xl flex flex-col items-center text-center">

@@ -12,8 +12,10 @@ import { setSignUp } from "@/store/modalSlice";
 import TopNav from "@/components/TopNav";
 import { PAGE } from "@/lib/constants";
 import { SparklesIcon } from "@heroicons/react/24/solid";
+import { useViewportFix } from "@/hooks/useViewportFix";
 
 export default function ChatPage() {
+  const containerRef = useViewportFix();
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { isSignedIn } = useAuth();
@@ -56,7 +58,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-dvh bg-[#212121] overflow-hidden">
+    <div ref={containerRef} className="fixed inset-x-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
       <TopNav page={isSignedIn ? PAGE.CHAT : PAGE.UNAUTH_CHAT} />
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />
