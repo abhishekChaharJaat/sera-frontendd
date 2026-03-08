@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 import ChatBox from "@/components/ChatBox";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import { AppDispatch } from "@/store/store";
@@ -13,8 +14,15 @@ import { PAGE } from "@/lib/constants";
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const { isLoaded, isSignedIn } = useAuth();
   const [input, setInput] = useState("");
   const submitting = useRef(false);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.replace("/home");
+    }
+  }, [isLoaded, isSignedIn]);
 
   const handleSubmit = async () => {
     const trimmed = input.trim();
@@ -26,21 +34,14 @@ export default function Home() {
     if (createThread.fulfilled.match(result) && trimmed.length > 0) {
       const { thread_id } = result.payload;
       const tempMsgId = crypto.randomUUID();
-      dispatch(
-        chatActions.addMessage({
-          id: tempMsgId,
-          role: "user",
-          content: trimmed,
-          timestamp: Date.now(),
-        }),
-      );
-      dispatch(
-        sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }),
-      );
+      dispatch(chatActions.addMessage({ id: tempMsgId, role: "user", content: trimmed, timestamp: Date.now() }));
+      dispatch(sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }));
       router.push(`/chat/${thread_id}`);
     }
     submitting.current = false;
   };
+
+  if (isSignedIn) return null;
 
   return (
     <div className="flex flex-col h-screen bg-[#212121]">
@@ -53,17 +54,10 @@ export default function Home() {
           How can I help you today?
         </h1>
         <p className="text-white/40 text-sm max-w-md">
-          Start a conversation. I&apos;m here to assist you with anything you
-          need.
+          Start a conversation. I&apos;m here to assist you with anything you need.
         </p>
       </div>
-
-      <ChatBox
-        value={input}
-        onChange={setInput}
-        onSubmit={handleSubmit}
-        disabled={false}
-      />
+      <ChatBox value={input} onChange={setInput} onSubmit={handleSubmit} disabled={false} />
     </div>
   );
 }

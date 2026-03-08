@@ -1,31 +1,35 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { Message, ThreadData } from "./types";
+import { Message, ThreadData, ThreadSummary } from "./types";
+import { buildAuth } from "@/lib/helpers";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const THREAD_KEY = "active_thread_id";
-
 export const saveThreadId = (id: string) => localStorage.setItem(THREAD_KEY, id);
 export const loadThreadId = () => localStorage.getItem(THREAD_KEY);
 export const clearThreadId = () => localStorage.removeItem(THREAD_KEY);
 
+
 interface ChatState {
   threadData: ThreadData | null;
+  threads: ThreadSummary[];
   threadCreationLoading: boolean;
   threadCreationError: string | null;
   fetchMessagesLoading: boolean;
   fetchMessagesError: string | null;
+  fetchThreadsLoading: boolean;
   sendMessageLoading: boolean;
   sendMessageError: string | null;
-  // true while SSE chunks are being received (after first chunk, before done)
   isStreaming: boolean;
 }
 
 const initialState: ChatState = {
   threadData: null,
+  threads: [],
   threadCreationLoading: false,
   threadCreationError: null,
   fetchMessagesLoading: false,
   fetchMessagesError: null,
+  fetchThreadsLoading: false,
   sendMessageLoading: false,
   sendMessageError: null,
   isStreaming: false,
@@ -35,7 +39,11 @@ export const createThread = createAsyncThunk(
   "chat/createThread",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE}/create-thread`, { method: "POST" });
+      const { headers, anonParam } = buildAuth();
+      const res = await fetch(`${API_BASE}/create-thread${anonParam}`, {
+        method: "POST",
+        headers,
+      });
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data = await res.json();
       saveThreadId(data.thread_id);
@@ -52,10 +60,10 @@ export const fetchMessages = createAsyncThunk(
   "chat/fetchMessages",
   async (threadId: string, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${API_BASE}/${threadId}/list-messages`);
+      const { headers, anonParam } = buildAuth();
+      const res = await fetch(`${API_BASE}/${threadId}/list-messages${anonParam}`, { headers });
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data = await res.json();
-      // Map backend messages (_id → id)
       const messages: Message[] = data.messages.map((m: { _id?: string; role: "user" | "assistant"; content: string; timestamp: string }) => ({
         id: m._id ?? crypto.randomUUID(),
         role: m.role,
@@ -71,6 +79,22 @@ export const fetchMessages = createAsyncThunk(
   },
 );
 
+export const fetchThreads = createAsyncThunk(
+  "chat/fetchThreads",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { headers } = buildAuth();
+      const res = await fetch(`${API_BASE}/list-threads`, { headers });
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      return (await res.json()) as ThreadSummary[];
+    } catch (err) {
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Failed to load threads.",
+      );
+    }
+  },
+);
+
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async (
@@ -79,19 +103,19 @@ export const sendMessage = createAsyncThunk(
   ) => {
     try {
       const { streamChat } = await import("@/lib/streamChat");
+      const { headers, anonParam } = buildAuth();
 
-      // Step 1: Save user message to DB (already shown optimistically in UI)
-      const sendRes = await fetch(`${API_BASE}/${threadId}/send-message`, {
+      const sendRes = await fetch(`${API_BASE}/${threadId}/send-message${anonParam}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...headers },
         body: JSON.stringify({ message }),
       });
       if (!sendRes.ok) throw new Error(`API error: ${sendRes.status}`);
       await streamChat(sendRes, dispatch, tempMsgId);
 
-      // Step 2: Generate AI response (title + streamed reply)
-      const genRes = await fetch(`${API_BASE}/${threadId}/generate-response`, {
+      const genRes = await fetch(`${API_BASE}/${threadId}/generate-response${anonParam}`, {
         method: "POST",
+        headers,
       });
       if (!genRes.ok) throw new Error(`API error: ${genRes.status}`);
       await streamChat(genRes, dispatch);
@@ -112,7 +136,6 @@ const chatSlice = createSlice({
         state.threadData.messages.push(action.payload);
       }
     },
-    // Append a streaming chunk to an existing assistant message
     appendChunk(state, action: PayloadAction<{ messageId: string; content: string }>) {
       if (state.threadData) {
         const msg = state.threadData.messages.find(
@@ -121,7 +144,6 @@ const chatSlice = createSlice({
         if (msg) msg.content += action.payload.content;
       }
     },
-    // Replace temp assistant message ID with the real DB ID after streaming ends
     updateMessageId(state, action: PayloadAction<{ oldId: string; newId: string }>) {
       if (state.threadData) {
         const msg = state.threadData.messages.find(
@@ -173,6 +195,16 @@ const chatSlice = createSlice({
         state.fetchMessagesLoading = false;
         state.fetchMessagesError = (action.payload as string) ?? "Failed to load messages.";
         clearThreadId();
+      })
+      .addCase(fetchThreads.pending, (state) => {
+        state.fetchThreadsLoading = true;
+      })
+      .addCase(fetchThreads.fulfilled, (state, action) => {
+        state.fetchThreadsLoading = false;
+        state.threads = action.payload;
+      })
+      .addCase(fetchThreads.rejected, (state) => {
+        state.fetchThreadsLoading = false;
       })
       .addCase(sendMessage.pending, (state) => {
         state.sendMessageLoading = true;

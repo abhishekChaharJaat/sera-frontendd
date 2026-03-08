@@ -5,6 +5,7 @@ import StoreProvider from "@/components/StoreProvider";
 import SideNav from "@/components/SideNav";
 import Signin from "@/modals/Signin";
 import Signup from "@/modals/Signup";
+import FullScreenLoader from "@/components/FullScreenLoader";
 
 export const metadata: Metadata = {
   title: "Sera",
@@ -21,10 +22,11 @@ export default function RootLayout({
       <html lang="en">
         <body className="antialiased">
           <StoreProvider>
+            <FullScreenLoader />
             <SideNav />
             <div className="pl-50">{children}</div>
             <Signin />
-          <Signup />
+            <Signup />
           </StoreProvider>
         </body>
       </html>

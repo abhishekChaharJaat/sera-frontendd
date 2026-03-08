@@ -12,3 +12,9 @@ export interface ThreadData {
   created_at: string;
 }
 
+export interface ThreadSummary {
+  thread_id: string;
+  title: string;
+  created_at: string;
+}
+

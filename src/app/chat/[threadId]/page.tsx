@@ -17,43 +17,25 @@ export default function ChatPage() {
   const { isSignedIn } = useAuth();
   const { threadId } = useParams<{ threadId: string }>();
   const threadData = useSelector((state: RootState) => state.chat.threadData);
-  const sendMessageLoading = useSelector(
-    (state: RootState) => state.chat.sendMessageLoading,
-  );
-  const fetchMessagesLoading = useSelector(
-    (state: RootState) => state.chat.fetchMessagesLoading,
-  );
+  const sendMessageLoading = useSelector((state: RootState) => state.chat.sendMessageLoading);
+  const fetchMessagesLoading = useSelector((state: RootState) => state.chat.fetchMessagesLoading);
   const [input, setInput] = useState("");
 
-  // On mount or refresh — restore thread from API if Redux state is empty
   useEffect(() => {
-    if (!threadData && threadId) {
+    if (threadId && threadData?.thread_id !== threadId) {
       dispatch(fetchMessages(threadId))
         .unwrap()
         .catch(() => router.replace("/"));
     }
-  }, []);
+  }, [threadId]);
 
   const handleSubmit = () => {
     const trimmed = input.trim();
     if (!trimmed || sendMessageLoading || !threadData) return;
     setInput("");
     const tempMsgId = crypto.randomUUID();
-    dispatch(
-      chatActions.addMessage({
-        id: tempMsgId,
-        role: "user",
-        content: trimmed,
-        timestamp: Date.now(),
-      }),
-    );
-    dispatch(
-      sendMessage({
-        threadId: threadData.thread_id,
-        message: trimmed,
-        tempMsgId,
-      }),
-    );
+    dispatch(chatActions.addMessage({ id: tempMsgId, role: "user", content: trimmed, timestamp: Date.now() }));
+    dispatch(sendMessage({ threadId: threadData.thread_id, message: trimmed, tempMsgId }));
   };
 
   if (fetchMessagesLoading) {
@@ -73,13 +55,7 @@ export default function ChatPage() {
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />
       </div>
-
-      <ChatBox
-        value={input}
-        onChange={setInput}
-        onSubmit={handleSubmit}
-        disabled={sendMessageLoading}
-      />
+      <ChatBox value={input} onChange={setInput} onSubmit={handleSubmit} disabled={sendMessageLoading} />
     </div>
   );
 }

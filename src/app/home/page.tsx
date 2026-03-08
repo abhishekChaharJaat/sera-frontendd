@@ -26,17 +26,8 @@ export default function HomePage() {
     if (createThread.fulfilled.match(result) && trimmed.length > 0) {
       const { thread_id } = result.payload;
       const tempMsgId = crypto.randomUUID();
-      dispatch(
-        chatActions.addMessage({
-          id: tempMsgId,
-          role: "user",
-          content: trimmed,
-          timestamp: Date.now(),
-        }),
-      );
-      dispatch(
-        sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }),
-      );
+      dispatch(chatActions.addMessage({ id: tempMsgId, role: "user", content: trimmed, timestamp: Date.now() }));
+      dispatch(sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }));
       router.push(`/chat/${thread_id}`);
     }
     submitting.current = false;
@@ -53,17 +44,10 @@ export default function HomePage() {
           How can I help you today?
         </h1>
         <p className="text-white/40 text-sm max-w-md">
-          Start a conversation. I&apos;m here to assist you with anything you
-          need.
+          Start a conversation. I&apos;m here to assist you with anything you need.
         </p>
       </div>
-
-      <ChatBox
-        value={input}
-        onChange={setInput}
-        onSubmit={handleSubmit}
-        disabled={false}
-      />
+      <ChatBox value={input} onChange={setInput} onSubmit={handleSubmit} disabled={false} />
     </div>
   );
 }
