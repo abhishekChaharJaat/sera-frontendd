@@ -6,6 +6,42 @@ import remarkGfm from "remark-gfm";
 import { ClipboardIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Message } from "@/store/types";
 
+// LLMs often generate indented code fences inside lists (e.g. "   ```javascript")
+// but leave the code content un-indented. CommonMark/remark then fails to parse
+// them as fenced code blocks. This strips the indent from the fence opener/closer
+// and normalises the content lines so remark always sees a top-level code fence.
+function preprocessMarkdown(content: string): string {
+  const lines = content.split("\n");
+  const result: string[] = [];
+  let inCodeBlock = false;
+  let fenceIndent = 0;
+
+  for (const line of lines) {
+    if (!inCodeBlock) {
+      const match = line.match(/^(\s*)(```|~~~)(.*)/);
+      if (match) {
+        inCodeBlock = true;
+        fenceIndent = match[1].length;
+        result.push(match[2] + match[3]);
+      } else {
+        result.push(line);
+      }
+    } else {
+      const closing = line.match(/^(\s*)(```|~~~)\s*$/);
+      if (closing) {
+        inCodeBlock = false;
+        fenceIndent = 0;
+        result.push(closing[2]);
+      } else {
+        // Strip up to fenceIndent leading spaces from content lines
+        result.push(fenceIndent > 0 ? line.replace(new RegExp(`^\\s{0,${fenceIndent}}`), "") : line);
+      }
+    }
+  }
+
+  return result.join("\n");
+}
+
 function CodeBlock({ className, children }: { className?: string; children: React.ReactNode }) {
   const [copied, setCopied] = useState(false);
   const code = String(children).replace(/\n$/, "");
@@ -80,7 +116,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
             },
           }}
         >
-          {message.content}
+          {preprocessMarkdown(message.content)}
         </ReactMarkdown>
       </div>
     </div>

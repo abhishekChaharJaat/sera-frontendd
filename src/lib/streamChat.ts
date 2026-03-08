@@ -4,6 +4,7 @@ import { chatActions } from "@/store/chatSlice";
 export async function streamChat(
   res: Response,
   dispatch: Dispatch,
+  tempMsgId?: string,
 ): Promise<void> {
   const reader = res.body!.getReader();
   const decoder = new TextDecoder();
@@ -27,12 +28,17 @@ export async function streamChat(
       const event = JSON.parse(line.slice(6));
 
       if (event.type === "user_message") {
-        dispatch(chatActions.addMessage({
-          id: event.id,
-          role: "user",
-          content: event.content,
-          timestamp: Date.now(),
-        }));
+        if (tempMsgId) {
+          // Swap the optimistic temp ID with the real DB ID
+          dispatch(chatActions.updateMessageId({ oldId: tempMsgId, newId: event.id }));
+        } else {
+          dispatch(chatActions.addMessage({
+            id: event.id,
+            role: "user",
+            content: event.content,
+            timestamp: Date.now(),
+          }));
+        }
       } else if (event.type === "chunk") {
         if (isFirstChunk) {
           dispatch(chatActions.addMessage({

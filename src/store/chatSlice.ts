@@ -74,20 +74,20 @@ export const fetchMessages = createAsyncThunk(
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async (
-    { threadId, message }: { threadId: string; message: string },
+    { threadId, message, tempMsgId }: { threadId: string; message: string; tempMsgId?: string },
     { dispatch, rejectWithValue },
   ) => {
     try {
       const { streamChat } = await import("@/lib/streamChat");
 
-      // Step 1: Save user message to DB and render it immediately
+      // Step 1: Save user message to DB (already shown optimistically in UI)
       const sendRes = await fetch(`${API_BASE}/${threadId}/send-message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
       });
       if (!sendRes.ok) throw new Error(`API error: ${sendRes.status}`);
-      await streamChat(sendRes, dispatch);
+      await streamChat(sendRes, dispatch, tempMsgId);
 
       // Step 2: Generate AI response (title + streamed reply)
       const genRes = await fetch(`${API_BASE}/${threadId}/generate-response`, {

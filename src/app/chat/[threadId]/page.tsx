@@ -6,7 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import RenderMessages from "@/components/RenderMessages";
 import ChatBox from "@/components/ChatBox";
 import { RootState, AppDispatch } from "@/store/store";
-import { sendMessage, fetchMessages } from "@/store/chatSlice";
+import { sendMessage, fetchMessages, chatActions } from "@/store/chatSlice";
 import TopNav from "@/components/TopNav";
 
 export default function ChatPage() {
@@ -35,7 +35,9 @@ export default function ChatPage() {
     const trimmed = input.trim();
     if (!trimmed || sendMessageLoading || !threadData) return;
     setInput("");
-    dispatch(sendMessage({ threadId: threadData.thread_id, message: trimmed }));
+    const tempMsgId = crypto.randomUUID();
+    dispatch(chatActions.addMessage({ id: tempMsgId, role: "user", content: trimmed, timestamp: Date.now() }));
+    dispatch(sendMessage({ threadId: threadData.thread_id, message: trimmed, tempMsgId }));
   };
 
   if (fetchMessagesLoading) {

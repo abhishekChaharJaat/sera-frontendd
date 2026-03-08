@@ -11,20 +11,16 @@ export default function RenderMessages() {
   const sendMessageLoading = useSelector((state: RootState) => state.chat.sendMessageLoading);
   const isStreaming = useSelector((state: RootState) => state.chat.isStreaming);
   const sendMessageError = useSelector((state: RootState) => state.chat.sendMessageError);
-  const lastUserRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (lastUserRef.current) {
-      lastUserRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, sendMessageLoading]);
-
-  const lastUserIndex = messages.map((m) => m.role).lastIndexOf("user");
 
   return (
     <div className="py-4 space-y-1 max-w-3xl mx-auto w-full">
-      {messages.map((msg, i) => (
-        <div key={msg.id} ref={i === lastUserIndex ? lastUserRef : undefined}>
+      {messages.map((msg) => (
+        <div key={msg.id}>
           <MessageBubble message={msg} />
         </div>
       ))}
@@ -36,6 +32,7 @@ export default function RenderMessages() {
           </div>
         </div>
       )}
+      <div ref={bottomRef} />
     </div>
   );
 }
