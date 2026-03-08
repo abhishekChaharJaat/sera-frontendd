@@ -68,7 +68,7 @@ export default function ChatBox({
             rows={1}
             className="
               flex-1 bg-transparent text-[#ececec] placeholder-white/30
-              text-sm pl-2 pr-12 py-3.5 resize-none outline-none
+              text-base md:text-sm pl-2 pr-12 py-3.5 resize-none outline-none
               leading-relaxed max-h-50 overflow-y-auto
               disabled:opacity-50 disabled:cursor-not-allowed
             "
