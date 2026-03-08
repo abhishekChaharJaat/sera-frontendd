@@ -34,8 +34,17 @@ export default function Home() {
     if (createThread.fulfilled.match(result) && trimmed.length > 0) {
       const { thread_id } = result.payload;
       const tempMsgId = crypto.randomUUID();
-      dispatch(chatActions.addMessage({ id: tempMsgId, role: "user", content: trimmed, timestamp: Date.now() }));
-      dispatch(sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }));
+      dispatch(
+        chatActions.addMessage({
+          id: tempMsgId,
+          role: "user",
+          content: trimmed,
+          timestamp: Date.now(),
+        }),
+      );
+      dispatch(
+        sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }),
+      );
       router.push(`/chat/${thread_id}`);
     }
     submitting.current = false;
@@ -44,20 +53,29 @@ export default function Home() {
   if (isSignedIn) return null;
 
   return (
-    <div className="flex flex-col h-screen bg-[#212121]">
+    <div className="flex flex-col h-dvh bg-[#212121]">
       <TopNav page={PAGE.UNAUTH_HOME} />
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-4 pb-16">
-        <div className="w-14 h-14 rounded-full bg-[#19c37d]/20 border border-[#19c37d]/30 flex items-center justify-center mb-6">
-          <SparklesIcon className="w-7 h-7 text-[#19c37d]" />
+      <div className="flex-1 flex flex-col items-center justify-center md:px-6">
+        <div className="w-full max-w-3xl flex flex-col items-center text-center">
+          <div className="w-14 h-14 rounded-full bg-[#19c37d]/20 border border-[#19c37d]/30 flex items-center justify-center mb-5">
+            <SparklesIcon className="w-7 h-7 text-[#19c37d]" />
+          </div>
+          <h1 className="text-2xl font-semibold text-white mb-3">
+            Start a conversation.
+          </h1>
+          <p className="text-white/40 text-sm max-w-xs leading-relaxed mb-6">
+            I&apos;m here to assist you with anything you need.
+          </p>
+          <div className="w-full">
+            <ChatBox
+              value={input}
+              onChange={setInput}
+              onSubmit={handleSubmit}
+              disabled={false}
+            />
+          </div>
         </div>
-        <h1 className="text-2xl font-semibold text-white mb-2">
-          How can I help you today?
-        </h1>
-        <p className="text-white/40 text-sm max-w-md">
-          Start a conversation. I&apos;m here to assist you with anything you need.
-        </p>
       </div>
-      <ChatBox value={input} onChange={setInput} onSubmit={handleSubmit} disabled={false} />
     </div>
   );
 }

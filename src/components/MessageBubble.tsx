@@ -76,7 +76,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
   if (isUser) {
     return (
       <div className="flex justify-end px-4 py-2">
-        <div className="bg-[#2f2f2f] text-[#ececec] rounded-2xl rounded-tr-sm px-4 py-3 text-base leading-relaxed max-w-[75%]">
+        <div className="bg-[#2f2f2f] text-[#ececec] rounded-2xl rounded-tr-sm px-4 py-3 text-base leading-relaxed max-w-[85%] sm:max-w-[75%]">
           {message.content}
         </div>
       </div>

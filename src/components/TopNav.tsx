@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { ShareIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ShareIcon, CheckIcon, PlusIcon, Bars3Icon } from "@heroicons/react/24/outline";
 
 import { RootState, AppDispatch } from "@/store/store";
-import { setSignIn, setSignUp } from "@/store/modalSlice";
+import { setSignIn, setSignUp, setSideNavOpen } from "@/store/modalSlice";
 import { PAGE } from "@/lib/constants";
+import SeraLogo from "@/components/SeraLogo";
 
 interface TopNavPropTypes {
   page: string;
@@ -15,6 +17,7 @@ interface TopNavPropTypes {
 export default function TopNav(props: TopNavPropTypes) {
   const { page } = props;
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const threadData = useSelector((state: RootState) => state.chat.threadData);
   const [copied, setCopied] = useState(false);
 
@@ -32,12 +35,12 @@ export default function TopNav(props: TopNavPropTypes) {
       {copied ? (
         <>
           <CheckIcon className="w-3.5 h-3.5 text-[#19c37d]" />
-          <span className="text-[#19c37d]">Copied</span>
+          <span className="hidden md:inline text-[#19c37d]">Copied</span>
         </>
       ) : (
         <>
           <ShareIcon className="w-3.5 h-3.5" />
-          Share
+          <span className="hidden md:inline">Share</span>
         </>
       )}
     </button>
@@ -61,11 +64,31 @@ export default function TopNav(props: TopNavPropTypes) {
     </button>
   );
 
+  const LogoMenuButton = () => (
+    <button
+      onClick={() => dispatch(setSideNavOpen(true))}
+      className="md:hidden cursor-pointer shrink-0"
+      title="Menu"
+    >
+      <SeraLogo />
+    </button>
+  );
+
   return (
-    <header className="flex items-center justify-between px-6 py-3 h-14 shrink-0">
+    <header className="flex items-center px-4 sm:px-6 py-3 h-14 shrink-0 gap-2">
+      {page === PAGE.UNAUTH_HOME && <LogoMenuButton />}
+      {page === PAGE.CHAT && (
+        <button
+          onClick={() => dispatch(setSideNavOpen(true))}
+          className="md:hidden p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-all cursor-pointer shrink-0"
+        >
+          <Bars3Icon className="w-5 h-5" />
+        </button>
+      )}
+
       {/* ======================= UNAUTH HOME PAGE ======================== */}
       {page === PAGE.UNAUTH_HOME && (
-        <div className="flex justify-end w-full gap-2">
+        <div className="flex justify-end flex-1 gap-2">
           <SigninButton />
           <SignupButton />
         </div>
@@ -73,30 +96,51 @@ export default function TopNav(props: TopNavPropTypes) {
 
       {/* ======================= AUTH HOME PAGE ======================== */}
       {page === PAGE.HOME && (
-        <div className="flex justify-end w-full">
-          <UserButton />
-        </div>
+        <>
+          {/* Mobile: hamburger | centered logo | user */}
+          <div className="flex items-center justify-between w-full md:hidden">
+            <button
+              onClick={() => dispatch(setSideNavOpen(true))}
+              className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+            >
+              <Bars3Icon className="w-5 h-5" />
+            </button>
+            <SeraLogo />
+            <UserButton />
+          </div>
+          {/* Desktop: just user on right */}
+          <div className="hidden md:flex justify-end flex-1">
+            <UserButton />
+          </div>
+        </>
       )}
 
       {/* ======================= UNAUTH CHAT PAGE ======================== */}
       {page === PAGE.UNAUTH_CHAT && (
-        <div className="w-full flex justify-between items-center">
-          <span className="text-white/60 text-sm font-medium truncate">
+        <div className="flex-1 flex items-center gap-2 min-w-0">
+          <button
+            onClick={() => router.push("/")}
+            className="shrink-0 p-1.5 rounded-full text-white/50 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all cursor-pointer"
+            title="New Chat"
+          >
+            <PlusIcon className="w-5 h-5" />
+          </button>
+          <span className="flex-1 text-white/60 text-sm font-medium truncate">
             {threadData?.title || "New Thread"}
           </span>
-          <div className="flex gap-2 items-center">
-            <SigninButton />
+          <div className="shrink-0">
             <SignupButton />
           </div>
         </div>
       )}
+
       {/* ======================= AUTH CHAT PAGES ======================== */}
       {page === PAGE.CHAT && (
-        <div className="w-full flex justify-between items-center">
-          <span className="text-white/60 text-sm font-medium truncate">
+        <div className="flex-1 flex justify-between items-center min-w-0">
+          <span className="text-white/60 text-sm font-medium truncate mr-2">
             {threadData?.title || "New Thread"}
           </span>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center shrink-0">
             <ShareButton />
             <UserButton />
           </div>

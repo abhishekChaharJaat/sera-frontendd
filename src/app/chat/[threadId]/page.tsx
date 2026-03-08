@@ -46,7 +46,7 @@ export default function ChatPage() {
 
   if (fetchMessagesLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#212121]">
+      <div className="flex h-dvh items-center justify-center bg-[#212121]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-6 h-6 border-2 border-[#19c37d]/30 border-t-[#19c37d] rounded-full animate-spin" />
           <p className="text-white/40 text-sm">Loading messages…</p>
@@ -56,17 +56,17 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#212121]">
+    <div className="flex flex-col h-dvh bg-[#212121]">
       <TopNav page={isSignedIn ? PAGE.CHAT : PAGE.UNAUTH_CHAT} />
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />
       </div>
       {showNudge && (
         <div className="px-4 pt-2">
-          <div className="max-w-3xl mx-auto flex items-center justify-between gap-4 px-4 py-2 rounded-2xl bg-[#2f2f2f] border border-white/10">
-            <div className="flex items-center gap-3 min-w-0">
+          <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 px-4 py-2 rounded-2xl bg-[#2f2f2f] border border-white/10">
+            <div className="flex items-center gap-2 min-w-0">
               <SparklesIcon className="w-4 h-4 text-[#19c37d] shrink-0" />
-              <p className="text-sm text-white/70 truncate">
+              <p className="text-xs sm:text-sm text-white/70 truncate">
                 Create a free account to save your chats and unlock more features.
               </p>
             </div>

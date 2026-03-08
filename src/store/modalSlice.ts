@@ -4,12 +4,14 @@ interface ModalState {
   isSignInOpen: boolean;
   isSignUpOpen: boolean;
   deleteThreadId: string | null;
+  isSideNavOpen: boolean;
 }
 
 const initialState: ModalState = {
   isSignInOpen: false,
   isSignUpOpen: false,
   deleteThreadId: null,
+  isSideNavOpen: false,
 };
 
 const modalSlice = createSlice({
@@ -27,8 +29,11 @@ const modalSlice = createSlice({
     setDeleteThreadId(state, action: PayloadAction<string | null>) {
       state.deleteThreadId = action.payload;
     },
+    setSideNavOpen(state, action: PayloadAction<boolean>) {
+      state.isSideNavOpen = action.payload;
+    },
   },
 });
 
-export const { setSignIn, setSignUp, setDeleteThreadId } = modalSlice.actions;
+export const { setSignIn, setSignUp, setDeleteThreadId, setSideNavOpen } = modalSlice.actions;
 export default modalSlice.reducer;

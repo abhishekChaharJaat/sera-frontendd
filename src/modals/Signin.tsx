@@ -33,7 +33,7 @@ const Signin = () => {
 
   return (
     <ModalBase onClose={() => dispatch(setSignIn(false))}>
-      <div className="p-6 md:px-20 md:py-10">
+      <div className="px-4 py-6 md:px-20 md:py-10">
         <SignIn
           routing="hash"
           forceRedirectUrl="/home"

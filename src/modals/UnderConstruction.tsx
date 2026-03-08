@@ -10,7 +10,7 @@ interface UnderConstructionProps {
 const UnderConstruction = ({ onClose }: UnderConstructionProps) => {
   return (
     <ModalBase onClose={onClose}>
-      <div className="flex flex-col items-center gap-6 px-8 py-4 w-80">
+      <div className="flex flex-col items-center gap-6 px-8 py-4 w-full md:w-80">
         <div className="flex items-center justify-center w-14 h-14 rounded-full bg-yellow-500/10">
           <WrenchScrewdriverIcon className="w-7 h-7 text-yellow-400" />
         </div>

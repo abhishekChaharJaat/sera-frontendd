@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import StoreProvider from "@/components/StoreProvider";
@@ -13,6 +13,13 @@ export const metadata: Metadata = {
   description: "Sera — your AI assistant",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  interactiveWidget: "resizes-content",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +32,7 @@ export default function RootLayout({
           <StoreProvider>
             <FullScreenLoader />
             <SideNav />
-            <div className="pl-50">{children}</div>
+            <div className="md:pl-50">{children}</div>
             <Signin />
             <Signup />
             <DeleteThread />

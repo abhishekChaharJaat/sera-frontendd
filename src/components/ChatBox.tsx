@@ -44,7 +44,7 @@ export default function ChatBox({
   return (
     <>
     {showUnderConstruction && <UnderConstruction onClose={() => setShowUnderConstruction(false)} />}
-    <div className="px-4 pb-4 pt-2">
+    <div className="px-4 pt-2" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
       <div className="max-w-3xl mx-auto">
         <div
           className={`relative flex items-end bg-[#2f2f2f] border border-white/10 shadow-lg transition-all duration-200 ${isMultiline ? "rounded-2xl" : "rounded-full"}`}

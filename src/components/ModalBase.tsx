@@ -19,15 +19,15 @@ export default function ModalBase({ onClose, children }: ModalBaseProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex items-end justify-center md:items-center"
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[3px]" />
 
-      {/* Box */}
+      {/* Box — bottom sheet on mobile, centered card on desktop */}
       <div
-        className="relative z-10 w-fit bg-[#2f2f2f] border border-white/10 rounded-2xl shadow-xl p-6"
+        className="relative z-10 w-full md:w-fit bg-[#2f2f2f] border border-white/10 rounded-t-3xl rounded-b-none md:rounded-2xl shadow-xl overflow-y-auto overflow-x-hidden max-h-[90dvh] md:max-h-none"
         onClick={(e) => e.stopPropagation()}
       >
         <button
