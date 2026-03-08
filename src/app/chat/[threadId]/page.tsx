@@ -56,7 +56,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-dvh bg-[#212121]">
+    <div className="flex flex-col h-dvh bg-[#212121] overflow-hidden">
       <TopNav page={isSignedIn ? PAGE.CHAT : PAGE.UNAUTH_CHAT} />
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />

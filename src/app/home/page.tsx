@@ -43,7 +43,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col h-dvh bg-[#212121]">
+    <div className="flex flex-col h-dvh bg-[#212121] overflow-hidden">
       <TopNav page={PAGE.HOME} />
       <div className="flex-1 flex flex-col items-center justify-center md:px-6">
         <div className="w-full max-w-3xl flex flex-col items-center text-center">

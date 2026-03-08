@@ -29,7 +29,7 @@ export default function ChatBox({
     ta.style.height = "auto";
     const height = Math.min(ta.scrollHeight, 200);
     ta.style.height = height + "px";
-    setIsMultiline(height > 52);
+    setIsMultiline(height > 62);
   }, [value]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {

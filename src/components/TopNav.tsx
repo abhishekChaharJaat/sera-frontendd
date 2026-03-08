@@ -75,7 +75,7 @@ export default function TopNav(props: TopNavPropTypes) {
   );
 
   return (
-    <header className="flex items-center px-4 sm:px-6 py-3 h-14 shrink-0 gap-2">
+    <header className="sticky top-0 z-10 flex items-center px-4 sm:px-6 py-3 h-14 shrink-0 gap-2 bg-[#212121]">
       {page === PAGE.UNAUTH_HOME && <LogoMenuButton />}
       {page === PAGE.CHAT && (
         <button
