@@ -58,7 +58,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div ref={containerRef} className="fixed inset-x-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
+    <div ref={containerRef} className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
       <TopNav page={isSignedIn ? PAGE.CHAT : PAGE.UNAUTH_CHAT} />
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />

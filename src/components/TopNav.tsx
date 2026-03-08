@@ -82,7 +82,7 @@ export default function TopNav(props: TopNavPropTypes) {
           onClick={() => dispatch(setSideNavOpen(true))}
           className="md:hidden p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-all cursor-pointer shrink-0"
         >
-          <Bars3Icon className="w-5 h-5" />
+          <Bars3Icon className="w-6 h-6 text-white" />
         </button>
       )}
 
@@ -103,7 +103,7 @@ export default function TopNav(props: TopNavPropTypes) {
               onClick={() => dispatch(setSideNavOpen(true))}
               className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
             >
-              <Bars3Icon className="w-5 h-5" />
+              <Bars3Icon className="w-6 h-6 text-white" />
             </button>
             <SeraLogo />
             <UserButton />

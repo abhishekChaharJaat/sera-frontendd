@@ -55,7 +55,7 @@ export default function Home() {
   if (isSignedIn) return null;
 
   return (
-    <div ref={containerRef} className="fixed inset-x-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
+    <div ref={containerRef} className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
       <TopNav page={PAGE.UNAUTH_HOME} />
       <div className="flex-1 flex flex-col items-center justify-center md:px-6">
         <div className="w-full max-w-3xl flex flex-col items-center text-center">
