@@ -2,6 +2,8 @@
 
 import { useRef, useEffect, useState, KeyboardEvent, ChangeEvent } from "react";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
+import { PaperClipIcon } from "@heroicons/react/24/outline";
+import UnderConstruction from "@/modals/UnderConstruction";
 
 interface ChatBoxProps {
   value: string;
@@ -19,6 +21,7 @@ export default function ChatBox({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [isMultiline, setIsMultiline] = useState(false);
+  const [showUnderConstruction, setShowUnderConstruction] = useState(false);
 
   useEffect(() => {
     const ta = textareaRef.current;
@@ -39,11 +42,20 @@ export default function ChatBox({
   const canSubmit = !disabled && value.trim().length > 0;
 
   return (
+    <>
+    {showUnderConstruction && <UnderConstruction onClose={() => setShowUnderConstruction(false)} />}
     <div className="px-4 pb-4 pt-2">
       <div className="max-w-3xl mx-auto">
         <div
           className={`relative flex items-end bg-[#2f2f2f] border border-white/10 shadow-lg transition-all duration-200 ${isMultiline ? "rounded-2xl" : "rounded-full"}`}
         >
+          <button
+            onClick={() => setShowUnderConstruction(true)}
+            className="shrink-0 ml-3 mb-3 p-1.5 rounded-full text-white/30 hover:text-white/60 hover:bg-white/5 transition-all cursor-pointer"
+            title="Attach file"
+          >
+            <PaperClipIcon className="w-4 h-4 stroke-[2.5]" />
+          </button>
           <textarea
             ref={textareaRef}
             value={value}
@@ -56,7 +68,7 @@ export default function ChatBox({
             rows={1}
             className="
               flex-1 bg-transparent text-[#ececec] placeholder-white/30
-              text-sm px-4 py-3.5 pr-12 resize-none outline-none
+              text-sm pl-2 pr-12 py-3.5 resize-none outline-none
               leading-relaxed max-h-50 overflow-y-auto
               disabled:opacity-50 disabled:cursor-not-allowed
             "
@@ -83,5 +95,6 @@ export default function ChatBox({
         </p>
       </div>
     </div>
+    </>
   );
 }

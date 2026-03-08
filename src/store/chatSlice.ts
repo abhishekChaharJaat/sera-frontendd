@@ -12,6 +12,7 @@ export const clearThreadId = () => localStorage.removeItem(THREAD_KEY);
 interface ChatState {
   threadData: ThreadData | null;
   threads: ThreadSummary[];
+  threadsInitialized: boolean;
   threadCreationLoading: boolean;
   threadCreationError: string | null;
   fetchMessagesLoading: boolean;
@@ -25,6 +26,7 @@ interface ChatState {
 const initialState: ChatState = {
   threadData: null,
   threads: [],
+  threadsInitialized: false,
   threadCreationLoading: false,
   threadCreationError: null,
   fetchMessagesLoading: false,
@@ -95,6 +97,23 @@ export const fetchThreads = createAsyncThunk(
   },
 );
 
+export const deleteThread = createAsyncThunk(
+  "chat/deleteThread",
+  async (threadId: string, { rejectWithValue }) => {
+    try {
+      const { headers } = buildAuth();
+      const res = await fetch(`${API_BASE}/${threadId}/delete-thread`, {
+        method: "DELETE",
+        headers,
+      });
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      return threadId;
+    } catch (err) {
+      return rejectWithValue(err instanceof Error ? err.message : "Failed to delete thread.");
+    }
+  },
+);
+
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async (
@@ -155,6 +174,8 @@ const chatSlice = createSlice({
     updateTitle(state, action: PayloadAction<string>) {
       if (state.threadData) {
         state.threadData.title = action.payload;
+        const thread = state.threads.find((t) => t.thread_id === state.threadData!.thread_id);
+        if (thread) thread.title = action.payload;
       }
     },
     setIsStreaming(state, action: PayloadAction<boolean>) {
@@ -162,6 +183,16 @@ const chatSlice = createSlice({
     },
     clearMessages(state) {
       state.threadData = null;
+      state.threadCreationError = null;
+      state.fetchMessagesError = null;
+      state.sendMessageError = null;
+      state.isStreaming = false;
+      clearThreadId();
+    },
+    clearAuth(state) {
+      state.threadData = null;
+      state.threads = [];
+      state.threadsInitialized = false;
       state.threadCreationError = null;
       state.fetchMessagesError = null;
       state.sendMessageError = null;
@@ -178,6 +209,10 @@ const chatSlice = createSlice({
       .addCase(createThread.fulfilled, (state, action) => {
         state.threadCreationLoading = false;
         state.threadData = action.payload;
+        if (state.threadsInitialized) {
+          const { thread_id, title, created_at } = action.payload;
+          state.threads.unshift({ thread_id, title, created_at });
+        }
       })
       .addCase(createThread.rejected, (state, action) => {
         state.threadCreationLoading = false;
@@ -202,9 +237,17 @@ const chatSlice = createSlice({
       .addCase(fetchThreads.fulfilled, (state, action) => {
         state.fetchThreadsLoading = false;
         state.threads = action.payload;
+        state.threadsInitialized = true;
       })
       .addCase(fetchThreads.rejected, (state) => {
         state.fetchThreadsLoading = false;
+      })
+      .addCase(deleteThread.fulfilled, (state, action) => {
+        state.threads = state.threads.filter((t) => t.thread_id !== action.payload);
+        if (state.threadData?.thread_id === action.payload) {
+          state.threadData = null;
+          clearThreadId();
+        }
       })
       .addCase(sendMessage.pending, (state) => {
         state.sendMessageLoading = true;
@@ -222,6 +265,6 @@ const chatSlice = createSlice({
   },
 });
 
-export const { addMessage, appendChunk, updateMessageId, updateTitle, setIsStreaming, clearMessages } = chatSlice.actions;
+export const { addMessage, appendChunk, updateMessageId, updateTitle, setIsStreaming, clearMessages, clearAuth } = chatSlice.actions;
 export const chatActions = chatSlice.actions;
 export default chatSlice.reducer;

@@ -5,6 +5,7 @@ import StoreProvider from "@/components/StoreProvider";
 import SideNav from "@/components/SideNav";
 import Signin from "@/modals/Signin";
 import Signup from "@/modals/Signup";
+import DeleteThread from "@/modals/DeleteThread";
 import FullScreenLoader from "@/components/FullScreenLoader";
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function RootLayout({
             <div className="pl-50">{children}</div>
             <Signin />
             <Signup />
+            <DeleteThread />
           </StoreProvider>
         </body>
       </html>

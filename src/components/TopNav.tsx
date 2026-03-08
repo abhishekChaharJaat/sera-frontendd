@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UserButton } from "@clerk/nextjs";
+import { ShareIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 import { RootState, AppDispatch } from "@/store/store";
 import { setSignIn, setSignUp } from "@/store/modalSlice";
@@ -14,6 +16,32 @@ export default function TopNav(props: TopNavPropTypes) {
   const { page } = props;
   const dispatch = useDispatch<AppDispatch>();
   const threadData = useSelector((state: RootState) => state.chat.threadData);
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const ShareButton = () => (
+    <button
+      onClick={handleShare}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all cursor-pointer"
+    >
+      {copied ? (
+        <>
+          <CheckIcon className="w-3.5 h-3.5 text-[#19c37d]" />
+          <span className="text-[#19c37d]">Copied</span>
+        </>
+      ) : (
+        <>
+          <ShareIcon className="w-3.5 h-3.5" />
+          Share
+        </>
+      )}
+    </button>
+  );
 
   const SigninButton = () => (
     <button
@@ -56,7 +84,7 @@ export default function TopNav(props: TopNavPropTypes) {
           <span className="text-white/60 text-sm font-medium truncate">
             {threadData?.title || "New Thread"}
           </span>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <SigninButton />
             <SignupButton />
           </div>
@@ -68,7 +96,10 @@ export default function TopNav(props: TopNavPropTypes) {
           <span className="text-white/60 text-sm font-medium truncate">
             {threadData?.title || "New Thread"}
           </span>
-          <UserButton />
+          <div className="flex gap-2 items-center">
+            <ShareButton />
+            <UserButton />
+          </div>
         </div>
       )}
     </header>

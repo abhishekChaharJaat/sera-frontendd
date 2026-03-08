@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ModalState {
   isSignInOpen: boolean;
   isSignUpOpen: boolean;
+  deleteThreadId: string | null;
 }
 
 const initialState: ModalState = {
   isSignInOpen: false,
   isSignUpOpen: false,
+  deleteThreadId: null,
 };
 
 const modalSlice = createSlice({
@@ -22,8 +24,11 @@ const modalSlice = createSlice({
       state.isSignUpOpen = action.payload;
       if (action.payload) state.isSignInOpen = false;
     },
+    setDeleteThreadId(state, action: PayloadAction<string | null>) {
+      state.deleteThreadId = action.payload;
+    },
   },
 });
 
-export const { setSignIn, setSignUp } = modalSlice.actions;
+export const { setSignIn, setSignUp, setDeleteThreadId } = modalSlice.actions;
 export default modalSlice.reducer;
