@@ -35,7 +35,8 @@ export default function ChatPage() {
         .unwrap()
         .catch(() => router.replace("/"));
     }
-  }, [threadId]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [threadId, threadData?.thread_id]);
 
   const handleSubmit = (files: File[]) => {
     const trimmed = input.trim();

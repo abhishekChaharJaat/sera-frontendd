@@ -79,8 +79,16 @@ export default function SideNav() {
           <div className="flex-1 overflow-y-auto flex flex-col gap-0.5">
             <p className="px-3 pb-1 text-xs font-medium text-white/25 uppercase tracking-wider">History</p>
             {fetchThreadsLoading ? (
-              <div className="flex justify-center py-4">
-                <div className="w-4 h-4 border-2 border-[#19c37d]/30 border-t-[#19c37d] rounded-full animate-spin" />
+              <div className="flex flex-col gap-0.5">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg">
+                    <div className="w-3.5 h-3.5 rounded bg-white/10 shrink-0 animate-pulse" />
+                    <div
+                      className="h-3 rounded bg-white/10 animate-pulse"
+                      style={{ width: `${55 + (i % 3) * 15}%` }}
+                    />
+                  </div>
+                ))}
               </div>
             ) : (
               threads.map((t) => (
