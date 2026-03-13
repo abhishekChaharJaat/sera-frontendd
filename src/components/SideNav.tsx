@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "@clerk/nextjs";
 import { PencilSquareIcon, ChatBubbleLeftIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { AppDispatch, RootState } from "@/store/store";
-import { clearMessages, fetchThreads, clearAuth } from "@/store/chatSlice";
+import { fetchThreads, clearAuth } from "@/store/threadSlice";
+import { clearMessages } from "@/store/messageSlice";
 import { setDeleteThreadId, setSideNavOpen, setSignIn, setSignUp } from "@/store/modalSlice";
 import SeraLogo from "@/components/SeraLogo";
 
@@ -15,9 +16,9 @@ export default function SideNav() {
   const router = useRouter();
   const pathname = usePathname();
   const { isSignedIn, getToken } = useAuth();
-  const threadData = useSelector((state: RootState) => state.chat.threadData);
-  const threads = useSelector((state: RootState) => state.chat.threads);
-  const fetchThreadsLoading = useSelector((state: RootState) => state.chat.fetchThreadsLoading);
+  const threadData = useSelector((state: RootState) => state.messages.threadData);
+  const threads = useSelector((state: RootState) => state.threads.threads);
+  const fetchThreadsLoading = useSelector((state: RootState) => state.threads.fetchThreadsLoading);
   const isSideNavOpen = useSelector((state: RootState) => state.modal.isSideNavOpen);
 
   useEffect(() => {

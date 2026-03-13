@@ -6,13 +6,13 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import ModalBase from "@/components/ModalBase";
 import { RootState, AppDispatch } from "@/store/store";
 import { setDeleteThreadId } from "@/store/modalSlice";
-import { deleteThread } from "@/store/chatSlice";
+import { deleteThread } from "@/store/threadSlice";
 
 const DeleteThread = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const threadId = useSelector((state: RootState) => state.modal.deleteThreadId);
-  const currentThreadId = useSelector((state: RootState) => state.chat.threadData?.thread_id);
+  const currentThreadId = useSelector((state: RootState) => state.messages.threadData?.thread_id);
 
   if (!threadId) return null;
 

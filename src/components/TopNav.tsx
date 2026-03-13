@@ -18,7 +18,7 @@ export default function TopNav(props: TopNavPropTypes) {
   const { page } = props;
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const threadData = useSelector((state: RootState) => state.chat.threadData);
+  const threadData = useSelector((state: RootState) => state.messages.threadData);
   const [copied, setCopied] = useState(false);
 
   const handleShare = () => {

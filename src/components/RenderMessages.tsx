@@ -7,10 +7,10 @@ import MessageBubble from "@/components/MessageBubble";
 import ThinkingBubble from "@/components/ThinkingBubble";
 
 export default function RenderMessages() {
-  const messages = useSelector((state: RootState) => state.chat.threadData?.messages ?? []);
-  const sendMessageLoading = useSelector((state: RootState) => state.chat.sendMessageLoading);
-  const isStreaming = useSelector((state: RootState) => state.chat.isStreaming);
-  const sendMessageError = useSelector((state: RootState) => state.chat.sendMessageError);
+  const messages = useSelector((state: RootState) => state.messages.threadData?.messages ?? []);
+  const sendMessageLoading = useSelector((state: RootState) => state.messages.sendMessageLoading);
+  const isStreaming = useSelector((state: RootState) => state.messages.isStreaming);
+  const sendMessageError = useSelector((state: RootState) => state.messages.sendMessageError);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

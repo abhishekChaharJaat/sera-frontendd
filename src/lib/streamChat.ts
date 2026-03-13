@@ -1,10 +1,14 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { chatActions } from "@/store/chatSlice";
+import { Attachment } from "@/store/types";
+import { messageActions } from "@/store/messageSlice";
+import { updateTitle } from "@/store/threadSlice";
 
 export async function streamChat(
   res: Response,
   dispatch: Dispatch,
   tempMsgId?: string,
+  pendingAttachments?: Attachment[],
+  threadId?: string,
 ): Promise<void> {
   const reader = res.body!.getReader();
   const decoder = new TextDecoder();
@@ -29,10 +33,16 @@ export async function streamChat(
 
       if (event.type === "user_message") {
         if (tempMsgId) {
-          // Swap the optimistic temp ID with the real DB ID
-          dispatch(chatActions.updateMessageId({ oldId: tempMsgId, newId: event.id }));
+          dispatch(messageActions.updateMessageId({ oldId: tempMsgId, newId: event.id }));
+          if (pendingAttachments && pendingAttachments.length > 0 && event.attachments?.length > 0) {
+            const merged: Attachment[] = pendingAttachments.map((att, i) => ({
+              ...att,
+              file_id: event.attachments[i]?.file_id,
+            }));
+            dispatch(messageActions.updateMessageAttachments({ messageId: event.id, attachments: merged }));
+          }
         } else {
-          dispatch(chatActions.addMessage({
+          dispatch(messageActions.addMessage({
             id: event.id,
             role: "user",
             content: event.content,
@@ -41,28 +51,30 @@ export async function streamChat(
         }
       } else if (event.type === "chunk") {
         if (isFirstChunk) {
-          dispatch(chatActions.addMessage({
+          dispatch(messageActions.addMessage({
             id: tempAssistantId,
             role: "assistant",
             content: event.content,
             timestamp: Date.now(),
           }));
-          dispatch(chatActions.setIsStreaming(true));
+          dispatch(messageActions.setIsStreaming(true));
           isFirstChunk = false;
         } else {
-          dispatch(chatActions.appendChunk({
+          dispatch(messageActions.appendChunk({
             messageId: tempAssistantId,
             content: event.content,
           }));
         }
       } else if (event.type === "title") {
-        dispatch(chatActions.updateTitle(event.title));
+        if (threadId) {
+          dispatch(updateTitle({ threadId, title: event.title }));
+        }
       } else if (event.type === "done") {
-        dispatch(chatActions.updateMessageId({
+        dispatch(messageActions.updateMessageId({
           oldId: tempAssistantId,
           newId: event.id,
         }));
-        dispatch(chatActions.setIsStreaming(false));
+        dispatch(messageActions.setIsStreaming(false));
       }
     }
   }

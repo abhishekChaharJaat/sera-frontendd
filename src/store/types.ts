@@ -1,9 +1,28 @@
-export interface Message {
+export interface Attachment {
+  file_id?: string;
+  filename: string;
+  content_type: string;
+  size: number;
+  status: "pending" | "success" | "failed";
+  reason?: string;
+}
+
+interface BaseMessage {
   id: string;
-  role: "user" | "assistant";
   content: string;
   timestamp: number;
 }
+
+export interface UserMessage extends BaseMessage {
+  role: "user";
+  attachments?: Attachment[];
+}
+
+export interface AssistantMessage extends BaseMessage {
+  role: "assistant";
+}
+
+export type Message = UserMessage | AssistantMessage;
 
 export interface ThreadData {
   thread_id: string;
@@ -17,4 +36,3 @@ export interface ThreadSummary {
   title: string;
   created_at: string;
 }
-

@@ -7,7 +7,7 @@ import { useAuth } from "@clerk/nextjs";
 import RenderMessages from "@/components/RenderMessages";
 import ChatBox from "@/components/ChatBox";
 import { RootState, AppDispatch } from "@/store/store";
-import { sendMessage, fetchMessages, chatActions } from "@/store/chatSlice";
+import { sendMessage, fetchMessages, messageActions } from "@/store/messageSlice";
 import { setSignUp } from "@/store/modalSlice";
 import TopNav from "@/components/TopNav";
 import { PAGE } from "@/lib/constants";
@@ -20,12 +20,12 @@ export default function ChatPage() {
   const router = useRouter();
   const { isSignedIn } = useAuth();
   const { threadId } = useParams<{ threadId: string }>();
-  const threadData = useSelector((state: RootState) => state.chat.threadData);
-  const sendMessageLoading = useSelector((state: RootState) => state.chat.sendMessageLoading);
-  const fetchMessagesLoading = useSelector((state: RootState) => state.chat.fetchMessagesLoading);
+  const threadData = useSelector((state: RootState) => state.messages.threadData);
+  const sendMessageLoading = useSelector((state: RootState) => state.messages.sendMessageLoading);
+  const fetchMessagesLoading = useSelector((state: RootState) => state.messages.fetchMessagesLoading);
   const [input, setInput] = useState("");
   const userMessageCount = useSelector(
-    (state: RootState) => state.chat.threadData?.messages.filter((m) => m.role === "user").length ?? 0
+    (state: RootState) => state.messages.threadData?.messages.filter((m) => m.role === "user").length ?? 0
   );
   const showNudge = !isSignedIn && userMessageCount >= 2;
 
@@ -37,13 +37,25 @@ export default function ChatPage() {
     }
   }, [threadId]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (files: File[]) => {
     const trimmed = input.trim();
-    if (!trimmed || sendMessageLoading || !threadData) return;
+    if ((!trimmed && files.length === 0) || sendMessageLoading || !threadData) return;
     setInput("");
     const tempMsgId = crypto.randomUUID();
-    dispatch(chatActions.addMessage({ id: tempMsgId, role: "user", content: trimmed, timestamp: Date.now() }));
-    dispatch(sendMessage({ threadId: threadData.thread_id, message: trimmed, tempMsgId }));
+    const pendingAttachments = files.map((f) => ({
+      filename: f.name,
+      content_type: f.type,
+      size: f.size,
+      status: "pending" as const,
+    }));
+    dispatch(messageActions.addMessage({
+      id: tempMsgId,
+      role: "user",
+      content: trimmed,
+      timestamp: Date.now(),
+      attachments: pendingAttachments.length > 0 ? pendingAttachments : undefined,
+    }));
+    dispatch(sendMessage({ threadId: threadData.thread_id, message: trimmed, tempMsgId, attachments: files }));
   };
 
   if (fetchMessagesLoading) {

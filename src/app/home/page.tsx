@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import ChatBox from "@/components/ChatBox";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import { AppDispatch } from "@/store/store";
-import { createThread, sendMessage, chatActions } from "@/store/chatSlice";
+import { createThread } from "@/store/threadSlice";
+import { sendMessage, messageActions } from "@/store/messageSlice";
 import TopNav from "@/components/TopNav";
 import { PAGE } from "@/lib/constants";
 import { useViewportFix } from "@/hooks/useViewportFix";
@@ -18,26 +19,33 @@ export default function HomePage() {
   const [input, setInput] = useState("");
   const submitting = useRef(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (files: File[]) => {
     const trimmed = input.trim();
-    if (!trimmed || submitting.current) return;
+    if ((!trimmed && files.length === 0) || submitting.current) return;
     submitting.current = true;
     setInput("");
 
     const result = await dispatch(createThread());
-    if (createThread.fulfilled.match(result) && trimmed.length > 0) {
+    if (createThread.fulfilled.match(result)) {
       const { thread_id } = result.payload;
       const tempMsgId = crypto.randomUUID();
+      const pendingAttachments = files.map((f) => ({
+        filename: f.name,
+        content_type: f.type,
+        size: f.size,
+        status: "pending" as const,
+      }));
       dispatch(
-        chatActions.addMessage({
+        messageActions.addMessage({
           id: tempMsgId,
           role: "user",
           content: trimmed,
           timestamp: Date.now(),
+          attachments: pendingAttachments.length > 0 ? pendingAttachments : undefined,
         }),
       );
       dispatch(
-        sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }),
+        sendMessage({ threadId: thread_id, message: trimmed, tempMsgId, attachments: files }),
       );
       router.push(`/chat/${thread_id}`);
     }

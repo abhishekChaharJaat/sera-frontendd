@@ -7,7 +7,8 @@ import { useAuth } from "@clerk/nextjs";
 import ChatBox from "@/components/ChatBox";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import { AppDispatch } from "@/store/store";
-import { createThread, sendMessage, chatActions } from "@/store/chatSlice";
+import { createThread } from "@/store/threadSlice";
+import { sendMessage, messageActions } from "@/store/messageSlice";
 import TopNav from "@/components/TopNav";
 import { PAGE } from "@/lib/constants";
 import { useViewportFix } from "@/hooks/useViewportFix";
@@ -37,7 +38,7 @@ export default function Home() {
       const { thread_id } = result.payload;
       const tempMsgId = crypto.randomUUID();
       dispatch(
-        chatActions.addMessage({
+        messageActions.addMessage({
           id: tempMsgId,
           role: "user",
           content: trimmed,

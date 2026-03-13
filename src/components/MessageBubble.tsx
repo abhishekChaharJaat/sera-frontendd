@@ -3,7 +3,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ClipboardIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ClipboardIcon, CheckIcon, DocumentIcon, CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { Message } from "@/store/types";
 
 // LLMs often generate indented code fences inside lists (e.g. "   ```javascript")
@@ -76,8 +76,38 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
   if (isUser) {
     return (
       <div className="flex justify-end px-4 py-2">
-        <div className="bg-[#2f2f2f] text-[#ececec] rounded-2xl rounded-tr-sm px-4 py-3 text-base leading-relaxed max-w-[85%] sm:max-w-[75%]">
-          {message.content}
+        <div className="flex flex-col items-end gap-1.5 max-w-[85%] sm:max-w-[75%]">
+          {message.content && (
+            <div className="bg-[#2f2f2f] text-[#ececec] rounded-2xl rounded-tr-sm px-4 py-3 text-base leading-relaxed">
+              {message.content}
+            </div>
+          )}
+          {message.attachments && message.attachments.length > 0 && (
+            <div className="flex flex-col gap-1.5">
+              {message.attachments.map((att, i) => (
+                <div key={i} className="relative group flex items-center gap-1.5 bg-white/10 rounded-xl px-2.5 py-1.5 w-52">
+                  <DocumentIcon className="w-4 h-4 text-white/50 shrink-0" />
+                  <span className="text-xs text-white/70 truncate flex-1 min-w-0">{att.filename}</span>
+                  {att.status === "pending" && (
+                    <div className="w-3.5 h-3.5 rounded-full border-2 border-white/20 border-t-white/60 animate-spin shrink-0" />
+                  )}
+                  {att.status === "success" && (
+                    <CheckCircleIcon className="w-3.5 h-3.5 text-green-400 shrink-0" />
+                  )}
+                  {att.status === "failed" && (
+                    <>
+                      <ExclamationCircleIcon className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                      {att.reason && (
+                        <div className="absolute bottom-full right-0 mb-1.5 hidden group-hover:block bg-[#1a1a1a] border border-white/10 text-red-400 text-xs rounded-lg px-2.5 py-1.5 whitespace-nowrap z-10 pointer-events-none">
+                          {att.reason}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );
