@@ -11,6 +11,16 @@ import FullScreenLoader from "@/components/FullScreenLoader";
 export const metadata: Metadata = {
   title: "Sera",
   description: "Sera — your AI assistant",
+  openGraph: {
+    title: "Sera",
+    description: "Sera — your AI assistant",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sera",
+    description: "Sera — your AI assistant",
+  },
 };
 
 export const viewport: Viewport = {
