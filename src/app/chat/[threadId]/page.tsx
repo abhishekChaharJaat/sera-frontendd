@@ -8,10 +8,8 @@ import RenderMessages from "@/components/RenderMessages";
 import ChatBox from "@/components/ChatBox";
 import { RootState, AppDispatch } from "@/store/store";
 import { sendMessage, fetchMessages, messageActions } from "@/store/messageSlice";
-import { setSignUp } from "@/store/modalSlice";
 import TopNav from "@/components/TopNav";
 import { PAGE } from "@/lib/constants";
-import { SparklesIcon } from "@heroicons/react/24/solid";
 import { useViewportFix } from "@/hooks/useViewportFix";
 
 export default function ChatPage() {
@@ -24,11 +22,6 @@ export default function ChatPage() {
   const sendMessageLoading = useSelector((state: RootState) => state.messages.sendMessageLoading);
   const fetchMessagesLoading = useSelector((state: RootState) => state.messages.fetchMessagesLoading);
   const [input, setInput] = useState("");
-  const userMessageCount = useSelector(
-    (state: RootState) => state.messages.threadData?.messages.filter((m) => m.role === "user").length ?? 0
-  );
-  const showNudge = !isSignedIn && userMessageCount >= 2;
-
   useEffect(() => {
     if (threadId && threadData?.thread_id !== threadId) {
       dispatch(fetchMessages(threadId))
@@ -76,27 +69,7 @@ export default function ChatPage() {
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />
       </div>
-      {showNudge && (
-        <div className="px-4 pt-2">
-          <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 px-4 py-2 rounded-2xl bg-[#2f2f2f] border border-white/10">
-            <div className="flex items-center gap-2 min-w-0">
-              <SparklesIcon className="w-4 h-4 text-[#19c37d] shrink-0" />
-              <p className="text-xs sm:text-sm text-white/70 truncate">
-                Create a free account to save your chats and unlock more features.
-              </p>
-            </div>
-            <div className="flex gap-2 shrink-0">
-              <button
-                onClick={() => dispatch(setSignUp(true))}
-                className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#19c37d] hover:bg-[#17b371] text-white transition-all cursor-pointer"
-              >
-                Sign up
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      <ChatBox value={input} onChange={setInput} onSubmit={handleSubmit} disabled={sendMessageLoading} />
+<ChatBox value={input} onChange={setInput} onSubmit={handleSubmit} disabled={sendMessageLoading} />
     </div>
   );
 }
