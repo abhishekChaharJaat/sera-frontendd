@@ -8,9 +8,9 @@ import {
   updateTitle,
   clearThreadId,
 } from "./threadSlice";
+import { MAX_FILE_SIZE } from "@/lib/constants";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 interface MessageState {
   threadData: ThreadData | null;
@@ -93,7 +93,7 @@ export const sendMessage = createAsyncThunk(
           status: file.size > MAX_FILE_SIZE ? "failed" : "success",
           reason:
             file.size > MAX_FILE_SIZE
-              ? "File size limit exceeded (max 5MB)"
+              ? "File size limit exceeded (max 2MB)"
               : undefined,
         }),
       );

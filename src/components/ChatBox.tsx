@@ -1,9 +1,12 @@
 "use client";
 
 import { useRef, useEffect, useState, KeyboardEvent, ChangeEvent } from "react";
+import { useDispatch } from "react-redux";
 import { ArrowUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { PlusIcon, DocumentIcon } from "@heroicons/react/24/outline";
-import { MAX_FILE_ATTACH } from "@/lib/constants";
+import { MAX_FILE_ATTACH, MAX_FILE_SIZE } from "@/lib/constants";
+import { setFileUploadError } from "@/store/modalSlice";
+import { AppDispatch } from "@/store/store";
 
 interface ChatBoxProps {
   value: string;
@@ -18,6 +21,7 @@ export default function ChatBox({
   onSubmit,
   disabled,
 }: ChatBoxProps) {
+  const dispatch = useDispatch<AppDispatch>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMultiline, setIsMultiline] = useState(false);
@@ -45,10 +49,36 @@ export default function ChatBox({
     setAttachedFiles([]);
   };
 
+  const ALLOWED_TYPES = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"];
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || []);
-    console.log(selected);
-    setAttachedFiles((prev) => [...prev, ...selected].slice(0, MAX_FILE_ATTACH));
+
+    if (selected.some((f) => !ALLOWED_TYPES.includes(f.type))) {
+      dispatch(setFileUploadError("type"));
+      e.target.value = "";
+      return;
+    }
+
+    if (selected.some((f) => f.size > MAX_FILE_SIZE)) {
+      dispatch(setFileUploadError("size"));
+      e.target.value = "";
+      return;
+    }
+
+    if (attachedFiles.length >= MAX_FILE_ATTACH) {
+      dispatch(setFileUploadError("count"));
+      e.target.value = "";
+      return;
+    }
+
+    const valid = selected.filter((f) => f.size <= MAX_FILE_SIZE);
+    if (attachedFiles.length + valid.length > MAX_FILE_ATTACH) {
+      dispatch(setFileUploadError("count"));
+      e.target.value = "";
+      return;
+    }
+    setAttachedFiles((prev) => [...prev, ...valid]);
     e.target.value = "";
   };
 
@@ -101,6 +131,7 @@ export default function ChatBox({
               ref={fileInputRef}
               type="file"
               multiple
+              accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
               className="hidden"
               onChange={handleFileChange}
             />

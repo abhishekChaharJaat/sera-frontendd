@@ -6,6 +6,7 @@ import SideNav from "@/components/SideNav";
 import Signin from "@/modals/Signin";
 import Signup from "@/modals/Signup";
 import DeleteThread from "@/modals/DeleteThread";
+import FileUploadAlert from "@/modals/FileUploadAlert";
 import FullScreenLoader from "@/components/FullScreenLoader";
 
 export const metadata: Metadata = {
@@ -46,6 +47,7 @@ export default function RootLayout({
             <Signin />
             <Signup />
             <DeleteThread />
+            <FileUploadAlert />
           </StoreProvider>
         </body>
       </html>

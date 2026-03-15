@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export type FileUploadErrorType = "size" | "count" | "type";
+
 interface ModalState {
   isSignInOpen: boolean;
   isSignUpOpen: boolean;
   deleteThreadId: string | null;
   isSideNavOpen: boolean;
+  fileUploadError: { isOpen: boolean; errorType: FileUploadErrorType | null };
 }
 
 const initialState: ModalState = {
@@ -12,6 +15,7 @@ const initialState: ModalState = {
   isSignUpOpen: false,
   deleteThreadId: null,
   isSideNavOpen: false,
+  fileUploadError: { isOpen: false, errorType: null },
 };
 
 const modalSlice = createSlice({
@@ -32,8 +36,14 @@ const modalSlice = createSlice({
     setSideNavOpen(state, action: PayloadAction<boolean>) {
       state.isSideNavOpen = action.payload;
     },
+    setFileUploadError(state, action: PayloadAction<FileUploadErrorType | null>) {
+      state.fileUploadError = {
+        isOpen: action.payload !== null,
+        errorType: action.payload,
+      };
+    },
   },
 });
 
-export const { setSignIn, setSignUp, setDeleteThreadId, setSideNavOpen } = modalSlice.actions;
+export const { setSignIn, setSignUp, setDeleteThreadId, setSideNavOpen, setFileUploadError } = modalSlice.actions;
 export default modalSlice.reducer;
