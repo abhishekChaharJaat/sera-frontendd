@@ -29,6 +29,7 @@ export interface ThreadData {
   title: string;
   messages: Message[];
   created_at: string;
+  attached_files: number;
 }
 
 export interface ThreadSummary {

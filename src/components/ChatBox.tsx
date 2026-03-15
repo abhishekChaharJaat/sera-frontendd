@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef, useEffect, useState, KeyboardEvent, ChangeEvent } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ArrowUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { PlusIcon, DocumentIcon } from "@heroicons/react/24/outline";
-import { MAX_FILE_ATTACH, MAX_FILE_SIZE } from "@/lib/constants";
+import { MAX_FILE_ATTACH, MAX_FILE_SIZE, MAX_THREAD_FILES } from "@/lib/constants";
 import { setFileUploadError } from "@/store/modalSlice";
-import { AppDispatch } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 
 interface ChatBoxProps {
   value: string;
@@ -22,6 +22,9 @@ export default function ChatBox({
   disabled,
 }: ChatBoxProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const threadAttachedFiles = useSelector(
+    (state: RootState) => state.messages.threadData?.attached_files ?? 0
+  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMultiline, setIsMultiline] = useState(false);
@@ -55,30 +58,40 @@ export default function ChatBox({
     const selected = Array.from(e.target.files || []);
 
     if (selected.some((f) => !ALLOWED_TYPES.includes(f.type))) {
-      dispatch(setFileUploadError("type"));
+      dispatch(setFileUploadError({ errorType: "type" }));
       e.target.value = "";
       return;
     }
 
     if (selected.some((f) => f.size > MAX_FILE_SIZE)) {
-      dispatch(setFileUploadError("size"));
+      dispatch(setFileUploadError({ errorType: "size" }));
       e.target.value = "";
       return;
     }
 
+    // Per-message limit
     if (attachedFiles.length >= MAX_FILE_ATTACH) {
-      dispatch(setFileUploadError("count"));
+      dispatch(setFileUploadError({ errorType: "count" }));
       e.target.value = "";
       return;
     }
 
-    const valid = selected.filter((f) => f.size <= MAX_FILE_SIZE);
-    if (attachedFiles.length + valid.length > MAX_FILE_ATTACH) {
-      dispatch(setFileUploadError("count"));
+    // Per-thread limit
+    const threadSlotsLeft = MAX_THREAD_FILES - threadAttachedFiles - attachedFiles.length;
+    if (threadSlotsLeft <= 0) {
+      dispatch(setFileUploadError({ errorType: "thread_limit", remainingSlots: 0 }));
       e.target.value = "";
       return;
     }
-    setAttachedFiles((prev) => [...prev, ...valid]);
+
+    // Warn if selection would exceed remaining thread slots
+    if (selected.length > threadSlotsLeft) {
+      dispatch(setFileUploadError({ errorType: "thread_limit", remainingSlots: threadSlotsLeft }));
+      e.target.value = "";
+      return;
+    }
+
+    setAttachedFiles((prev) => [...prev, ...selected]);
     e.target.value = "";
   };
 
@@ -88,7 +101,9 @@ export default function ChatBox({
 
   const canSubmit =
     !disabled && (value.trim().length > 0 || attachedFiles.length > 0);
-  const canAddMore = attachedFiles.length < MAX_FILE_ATTACH;
+  const canAddMore =
+    attachedFiles.length < MAX_FILE_ATTACH &&
+    threadAttachedFiles + attachedFiles.length < MAX_THREAD_FILES;
   const hasFiles = attachedFiles.length > 0;
 
   return (
@@ -144,7 +159,7 @@ export default function ChatBox({
                   : "text-white/15 cursor-not-allowed"
               }`}
               title={
-                canAddMore ? "Attach file (max 2)" : "Maximum 2 files attached"
+                canAddMore ? "Attach file" : "File limit reached"
               }
             >
               <PlusIcon className="w-4 h-4 stroke-[2.5]" />

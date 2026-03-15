@@ -56,7 +56,7 @@ export const fetchMessages = createAsyncThunk(
           reason: a.reason || undefined,
         })) as Attachment[],
       }));
-      return { ...data, messages } as ThreadData;
+      return { ...data, messages, attached_files: data.attached_files ?? 0 } as ThreadData;
     } catch (err) {
       return rejectWithValue(
         err instanceof Error ? err.message : "Failed to load messages.",
@@ -126,6 +126,7 @@ export const sendMessage = createAsyncThunk(
       );
       if (!genRes.ok) throw new Error(`API error: ${genRes.status}`);
       await streamChat(genRes, dispatch, undefined, undefined, threadId);
+      return { fileCount: (attachments ?? []).length };
     } catch (err) {
       return rejectWithValue(
         err instanceof Error ? err.message : "Something went wrong.",
@@ -196,6 +197,7 @@ const messageSlice = createSlice({
           title: action.payload.title,
           created_at: action.payload.created_at,
           messages: [],
+          attached_files: 0,
         };
       })
       .addCase(fetchMessages.pending, (state) => {
@@ -237,9 +239,12 @@ const messageSlice = createSlice({
         state.sendMessageLoading = true;
         state.sendMessageError = null;
       })
-      .addCase(sendMessage.fulfilled, (state) => {
+      .addCase(sendMessage.fulfilled, (state, action) => {
         state.sendMessageLoading = false;
         state.isStreaming = false;
+        if (state.threadData && action.payload.fileCount > 0) {
+          state.threadData.attached_files += action.payload.fileCount;
+        }
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.sendMessageLoading = false;

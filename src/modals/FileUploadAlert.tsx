@@ -5,16 +5,16 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import ModalBase from "@/components/ModalBase";
 import { RootState, AppDispatch } from "@/store/store";
 import { setFileUploadError } from "@/store/modalSlice";
-import { MAX_FILE_ATTACH } from "@/lib/constants";
+import { MAX_FILE_ATTACH, MAX_THREAD_FILES } from "@/lib/constants";
 
-const messages: Record<string, { title: string; description: string }> = {
+const staticMessages: Record<string, { title: string; description: string }> = {
   size: {
     title: "File too large",
     description: "Each file must be 2 MB or smaller. Please choose a smaller file.",
   },
   count: {
     title: "Too many files",
-    description: `You can attach up to ${MAX_FILE_ATTACH} files per message. Remove one before adding another.`,
+    description: `You can attach up to ${MAX_FILE_ATTACH} files per message. Remove a file before adding another.`,
   },
   type: {
     title: "Unsupported file type",
@@ -24,13 +24,24 @@ const messages: Record<string, { title: string; description: string }> = {
 
 export default function FileUploadAlert() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isOpen, errorType } = useSelector(
+  const { isOpen, errorType, remainingSlots } = useSelector(
     (state: RootState) => state.modal.fileUploadError
   );
 
   if (!isOpen || !errorType) return null;
 
-  const { title, description } = messages[errorType];
+  let title: string;
+  let description: string;
+
+  if (errorType === "thread_limit") {
+    title = "Chat file limit reached";
+    description =
+      remainingSlots && remainingSlots > 0
+        ? `Only ${remainingSlots} more file${remainingSlots === 1 ? "" : "s"} allowed in this chat (${MAX_THREAD_FILES} total).`
+        : `This chat has reached the ${MAX_THREAD_FILES} file limit. No more files can be attached.`;
+  } else {
+    ({ title, description } = staticMessages[errorType]);
+  }
   const handleClose = () => dispatch(setFileUploadError(null));
 
   return (
