@@ -22,7 +22,9 @@ export default function TopNav(props: TopNavPropTypes) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
+    if (!threadData?.thread_id) return;
+    const shareUrl = `${window.location.origin}/shared/${threadData.thread_id}`;
+    navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
