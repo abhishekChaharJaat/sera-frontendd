@@ -20,6 +20,17 @@ export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
   const [input, setInput] = useState("");
   const submitting = useRef(false);
+  const [creating, setCreating] = useState(false);
+  const [showColdStartMsg, setShowColdStartMsg] = useState(false);
+
+  useEffect(() => {
+    if (!creating) {
+      setShowColdStartMsg(false);
+      return;
+    }
+    const timer = setTimeout(() => setShowColdStartMsg(true), 8000);
+    return () => clearTimeout(timer);
+  }, [creating]);
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
@@ -31,6 +42,7 @@ export default function Home() {
     const trimmed = input.trim();
     if (!trimmed || submitting.current) return;
     submitting.current = true;
+    setCreating(true);
     setInput("");
 
     const result = await dispatch(createThread());
@@ -49,14 +61,36 @@ export default function Home() {
         sendMessage({ threadId: thread_id, message: trimmed, tempMsgId }),
       );
       router.push(`/chat/${thread_id}`);
+    } else {
+      setCreating(false);
     }
     submitting.current = false;
   };
 
   if (isSignedIn) return null;
 
+  if (creating) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#212121]">
+        <div className="w-7 h-7 border-2 border-[#19c37d]/30 border-t-[#19c37d] rounded-full animate-spin" />
+        <p className="text-white/50 text-sm">Starting conversation…</p>
+        {showColdStartMsg && (
+          <p className="text-white/30 text-xs max-w-xs text-center leading-relaxed">
+            The server runs on a free tier — cold starts can take 40–45 seconds.
+            This wait is only for your first message; after this, your messages
+            will send fast.
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div ref={containerRef} className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
+    <div
+      ref={containerRef}
+      className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-[#212121]"
+      style={{ height: "100dvh" }}
+    >
       <TopNav page={PAGE.UNAUTH_HOME} />
       <div className="flex-1 flex flex-col items-center justify-center md:px-6">
         <div className="w-full max-w-3xl flex flex-col items-center text-center">
