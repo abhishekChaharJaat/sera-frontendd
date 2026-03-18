@@ -23,26 +23,26 @@ export default function Image() {
         {/* Icon circle */}
         <div
           style={{
-            width: 100,
-            height: 100,
+            width: 72,
+            height: 72,
             borderRadius: "50%",
             background: "rgba(25, 195, 125, 0.2)",
-            border: "2px solid rgba(25, 195, 125, 0.3)",
+            border: "1.5px solid rgba(25, 195, 125, 0.3)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: 32,
+            marginBottom: 28,
           }}
         >
           <svg
-            width="52"
-            height="52"
+            width="36"
+            height="36"
             viewBox="0 0 24 24"
             fill="none"
             stroke="#19c37d"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
             <path d="M18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
@@ -50,28 +50,70 @@ export default function Image() {
           </svg>
         </div>
 
-        {/* App name */}
+        {/* Heading */}
         <div
           style={{
-            fontSize: 80,
-            fontWeight: 700,
+            fontSize: 52,
+            fontWeight: 600,
             color: "white",
-            letterSpacing: "-2px",
-            marginBottom: 20,
+            marginBottom: 16,
+            letterSpacing: "-0.5px",
           }}
         >
-          Sera
+          Start a conversation.
         </div>
 
-        {/* Tagline */}
+        {/* Subtitle */}
         <div
           style={{
-            fontSize: 30,
-            color: "rgba(255,255,255,0.45)",
-            textAlign: "center",
+            fontSize: 24,
+            color: "rgba(255,255,255,0.4)",
+            marginBottom: 48,
           }}
         >
-          Your AI assistant
+          I&apos;m here to assist you with anything you need.
+        </div>
+
+        {/* Fake chat input box */}
+        <div
+          style={{
+            width: 720,
+            background: "#2f2f2f",
+            borderRadius: 16,
+            border: "1px solid rgba(255,255,255,0.08)",
+            padding: "18px 24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ color: "rgba(255,255,255,0.25)", fontSize: 20 }}>
+            Message Sera…
+          </div>
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 8,
+              background: "rgba(255,255,255,0.08)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(255,255,255,0.3)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
         </div>
       </div>
     ),
