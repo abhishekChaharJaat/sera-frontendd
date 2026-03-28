@@ -38,7 +38,14 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);document.documentElement.classList.add('theme-loaded');})();`,
+            }}
+          />
+        </head>
         <body className="antialiased">
           <StoreProvider>
             <FullScreenLoader />

@@ -113,7 +113,7 @@ export default function ChatBox({
     >
       <div className="max-w-3xl mx-auto">
         <div
-          className={`relative bg-[#2f2f2f] border border-white/10 shadow-lg transition-all duration-200 ${
+          className={`relative bg-(--input-bg) border border-(--border-subtle) shadow-lg transition-all duration-200 ${
             isMultiline || hasFiles ? "rounded-2xl" : "rounded-full"
           }`}
         >
@@ -123,15 +123,15 @@ export default function ChatBox({
               {attachedFiles.map((file, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-1.5 bg-white/10 rounded-xl px-2.5 py-1.5 max-w-50"
+                  className="flex items-center gap-1.5 bg-(--surface-muted) rounded-xl px-2.5 py-1.5 max-w-50"
                 >
-                  <DocumentIcon className="w-4 h-4 text-white/50 shrink-0" />
-                  <span className="text-xs text-white/70 truncate">
+                  <DocumentIcon className="w-4 h-4 text-(--text-muted) shrink-0" />
+                  <span className="text-xs text-(--text-muted) truncate">
                     {file.name}
                   </span>
                   <button
                     onClick={() => removeFile(i)}
-                    className="shrink-0 text-white/40 hover:text-white/70 transition-colors cursor-pointer"
+                    className="shrink-0 text-(--text-subtle) hover:text-(--text-muted) transition-colors cursor-pointer"
                   >
                     <XMarkIcon className="w-3.5 h-3.5" />
                   </button>
@@ -155,8 +155,8 @@ export default function ChatBox({
               disabled={!canAddMore}
               className={`shrink-0 ml-3 mb-3 p-1.5 rounded-full transition-all ${
                 canAddMore
-                  ? "text-white/30 hover:text-white/60 hover:bg-white/5 cursor-pointer"
-                  : "text-white/15 cursor-not-allowed"
+                  ? "text-(--text-subtle) hover:text-(--text-muted) hover:bg-(--surface-subtle) cursor-pointer"
+                  : "text-(--text-subtle) opacity-40 cursor-not-allowed"
               }`}
               title={
                 canAddMore ? "Attach file" : "File limit reached"
@@ -175,7 +175,7 @@ export default function ChatBox({
               disabled={disabled}
               rows={1}
               className="
-                flex-1 bg-transparent text-[#ececec] placeholder-white/30
+                flex-1 bg-transparent text-(--foreground) placeholder-(--text-subtle)
                 text-base md:text-sm pl-2 pr-12 py-3.5 resize-none outline-none
                 leading-relaxed max-h-50 overflow-y-auto
                 disabled:opacity-50 disabled:cursor-not-allowed
@@ -190,7 +190,7 @@ export default function ChatBox({
                 ${
                   canSubmit
                     ? "bg-white text-black hover:bg-white/90 cursor-pointer"
-                    : "bg-white/30 text-white/70 cursor-not-allowed"
+                    : "bg-(--surface-muted) text-(--text-muted) cursor-not-allowed"
                 }
               `}
               title="Send message"
@@ -199,7 +199,7 @@ export default function ChatBox({
             </button>
           </div>
         </div>
-        <p className="text-center text-xs text-white/20 mt-2">
+        <p className="text-center text-xs text-(--text-subtle) mt-2">
           AI can make mistakes. Verify important information.
         </p>
       </div>

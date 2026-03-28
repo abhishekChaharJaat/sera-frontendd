@@ -39,7 +39,7 @@ const Signup = () => {
           forceRedirectUrl="/home"
           signInForceRedirectUrl="/home"
         />
-        <p className="mt-4 text-center text-sm text-white/40">
+        <p className="mt-4 text-center text-sm text-(--text-subtle)">
           Already have an account?{" "}
           <button
             onClick={() => dispatch(setSignIn(true))}

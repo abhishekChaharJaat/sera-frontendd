@@ -54,17 +54,17 @@ export default function ChatPage() {
 
   if (fetchMessagesLoading) {
     return (
-      <div className="flex h-dvh items-center justify-center bg-[#212121]">
+      <div className="flex h-dvh items-center justify-center bg-(--background)">
         <div className="flex flex-col items-center gap-3">
           <div className="w-6 h-6 border-2 border-[#19c37d]/30 border-t-[#19c37d] rounded-full animate-spin" />
-          <p className="text-white/40 text-sm">Loading messages…</p>
+          <p className="text-(--text-subtle) text-sm">Loading messages…</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div ref={containerRef} className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-[#212121]" style={{ height: '100dvh' }}>
+    <div ref={containerRef} className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-(--background)" style={{ height: '100dvh' }}>
       <TopNav page={isSignedIn ? PAGE.CHAT : PAGE.UNAUTH_CHAT} />
       <div className="flex-1 overflow-y-auto">
         <RenderMessages />

@@ -53,10 +53,10 @@ function CodeBlock({ className, children }: { className?: string; children: Reac
   };
 
   return (
-    <pre className="relative group bg-[#1a1a1a] border border-white/10 rounded-lg p-3 overflow-x-auto my-2">
+    <pre className="relative group bg-(--code-bg) border border-(--border-subtle) rounded-lg p-3 overflow-x-auto my-2">
       <button
         onClick={handleCopy}
-        className="absolute top-2 right-2 p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white/40 hover:text-white/80 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+        className="absolute top-2 right-2 p-1.5 rounded-md bg-(--surface-subtle) hover:bg-(--surface-muted) text-(--text-subtle) hover:text-(--text-muted) opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
         title="Copy code"
       >
         {copied ? <CheckIcon className="w-3.5 h-3.5 text-[#19c37d]" /> : <ClipboardIcon className="w-3.5 h-3.5" />}
@@ -78,18 +78,18 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
       <div className="flex justify-end px-4 py-2">
         <div className="flex flex-col items-end gap-1.5 max-w-[85%] sm:max-w-[75%]">
           {message.content && (
-            <div className="bg-[#2f2f2f] text-[#ececec] rounded-2xl rounded-tr-sm px-4 py-3 text-base leading-relaxed">
+            <div className="bg-(--input-bg) text-(--foreground) rounded-2xl rounded-tr-sm px-4 py-3 text-base leading-relaxed">
               {message.content}
             </div>
           )}
           {message.attachments && message.attachments.length > 0 && (
             <div className="flex flex-col gap-1.5">
               {message.attachments.map((att, i) => (
-                <div key={i} className="relative group flex items-center gap-1.5 bg-white/10 rounded-xl px-2.5 py-1.5 w-52">
-                  <DocumentIcon className="w-4 h-4 text-white/50 shrink-0" />
-                  <span className="text-xs text-white/70 truncate flex-1 min-w-0">{att.filename}</span>
+                <div key={i} className="relative group flex items-center gap-1.5 bg-(--surface-muted) rounded-xl px-2.5 py-1.5 w-52">
+                  <DocumentIcon className="w-4 h-4 text-(--text-muted) shrink-0" />
+                  <span className="text-xs text-(--text-muted) truncate flex-1 min-w-0">{att.filename}</span>
                   {att.status === "pending" && (
-                    <div className="w-3.5 h-3.5 rounded-full border-2 border-white/20 border-t-white/60 animate-spin shrink-0" />
+                    <div className="w-3.5 h-3.5 rounded-full border-2 border-(--border-muted) border-t-(--text-muted) animate-spin shrink-0" />
                   )}
                   {att.status === "success" && (
                     <CheckCircleIcon className="w-3.5 h-3.5 text-green-400 shrink-0" />
@@ -98,7 +98,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
                     <>
                       <ExclamationCircleIcon className="w-3.5 h-3.5 text-red-400 shrink-0" />
                       {att.reason && (
-                        <div className="absolute bottom-full right-0 mb-1.5 hidden group-hover:block bg-[#1a1a1a] border border-white/10 text-red-400 text-xs rounded-lg px-2.5 py-1.5 whitespace-nowrap z-10 pointer-events-none">
+                        <div className="absolute bottom-full right-0 mb-1.5 hidden group-hover:block bg-(--code-bg) border border-(--border-subtle) text-red-400 text-xs rounded-lg px-2.5 py-1.5 whitespace-nowrap z-10 pointer-events-none">
                           {att.reason}
                         </div>
                       )}
@@ -115,7 +115,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
 
   return (
     <div className="flex justify-start px-4 py-2">
-      <div className="text-[#ececec] text-base leading-relaxed w-full prose prose-invert prose-base">
+      <div className="text-(--foreground) text-base leading-relaxed w-full prose prose-invert prose-base">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
@@ -124,7 +124,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
               return isBlock ? (
                 <CodeBlock className={className}>{children}</CodeBlock>
               ) : (
-                <code className="bg-[#1a1a1a] px-1.5 py-0.5 rounded text-xs text-[#19c37d]" {...props}>
+                <code className="bg-(--code-bg) px-1.5 py-0.5 rounded text-xs text-[#19c37d]" {...props}>
                   {children}
                 </code>
               );
@@ -139,7 +139,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
               return <p className="mb-2 last:mb-0">{children}</p>;
             },
             strong({ children }) {
-              return <strong className="font-semibold text-white">{children}</strong>;
+              return <strong className="font-semibold text-(--foreground)">{children}</strong>;
             },
             a({ href, children }) {
               return <a href={href} target="_blank" rel="noreferrer" className="text-[#19c37d] underline">{children}</a>;

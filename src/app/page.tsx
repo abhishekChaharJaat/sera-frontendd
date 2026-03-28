@@ -71,11 +71,11 @@ export default function Home() {
 
   if (creating) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#212121]">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-(--background)">
         <div className="w-7 h-7 border-2 border-[#19c37d]/30 border-t-[#19c37d] rounded-full animate-spin" />
-        <p className="text-white/50 text-sm">Starting conversation…</p>
+        <p className="text-(--text-muted) text-sm">Starting conversation…</p>
         {showColdStartMsg && (
-          <p className="text-white/30 text-xs max-w-xs text-center leading-relaxed">
+          <p className="text-(--text-subtle) text-xs max-w-xs text-center leading-relaxed">
             The server runs on a free tier — cold starts can take 40–45 seconds.
             This wait is only for your first message; after this, your messages
             will send fast.
@@ -88,7 +88,7 @@ export default function Home() {
   return (
     <div
       ref={containerRef}
-      className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-[#212121]"
+      className="fixed left-0 md:left-50 right-0 top-0 flex flex-col bg-(--background)"
       style={{ height: "100dvh" }}
     >
       <TopNav page={PAGE.UNAUTH_HOME} />
@@ -97,10 +97,10 @@ export default function Home() {
           <div className="w-14 h-14 rounded-full bg-[#19c37d]/20 border border-[#19c37d]/30 flex items-center justify-center mb-5">
             <SparklesIcon className="w-7 h-7 text-[#19c37d]" />
           </div>
-          <h1 className="text-2xl font-semibold text-white mb-3">
+          <h1 className="text-2xl font-semibold text-(--foreground) mb-3">
             Start a conversation.
           </h1>
-          <p className="text-white/40 text-sm max-w-xs leading-relaxed mb-6">
+          <p className="text-(--text-subtle) text-sm max-w-xs leading-relaxed mb-6">
             I&apos;m here to assist you with anything you need.
           </p>
           <div className="w-full">

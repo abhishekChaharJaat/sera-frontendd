@@ -32,13 +32,13 @@ const DeleteThread = () => {
           <ExclamationTriangleIcon className="w-7 h-7 text-red-400" />
         </div>
         <div className="text-center">
-          <h2 className="text-white font-semibold text-lg">Delete thread?</h2>
-          <p className="mt-2 text-sm text-white/50">This action cannot be undone.</p>
+          <h2 className="text-(--foreground) font-semibold text-lg">Delete thread?</h2>
+          <p className="mt-2 text-sm text-(--text-muted)">This action cannot be undone.</p>
         </div>
         <div className="flex gap-3 w-full mt-1">
           <button
             onClick={handleClose}
-            className="flex-1 px-4 py-2.5 rounded-full text-sm font-medium border border-white/10 text-white/60 hover:bg-white/5 hover:text-white transition-all cursor-pointer"
+            className="flex-1 px-4 py-2.5 rounded-full text-sm font-medium border border-(--border-subtle) text-(--text-muted) hover:bg-(--surface-subtle) hover:text-(--foreground) transition-all cursor-pointer"
           >
             Cancel
           </button>

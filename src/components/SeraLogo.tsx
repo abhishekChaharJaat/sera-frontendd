@@ -38,7 +38,7 @@ export default function SeraLogo() {
         style={{
           fontSize: "22px",
           fontWeight: 300,
-          color: "rgba(255,255,255,0.88)",
+          color: "var(--foreground)",
           lineHeight: 1,
           letterSpacing: "0.04em",
         }}

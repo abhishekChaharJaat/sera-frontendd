@@ -54,7 +54,7 @@ export default function SideNav() {
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-full w-50 bg-[#171717] border-r border-white/5 flex flex-col px-4 py-4 gap-4 z-50 transition-transform duration-300 ease-in-out
+        className={`fixed top-0 left-0 h-full w-50 bg-(--sidebar-bg) border-r border-(--border-subtle) flex flex-col px-4 py-4 gap-4 z-50 transition-transform duration-300 ease-in-out
           md:translate-x-0 ${isSideNavOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         {/* Logo */}
@@ -66,7 +66,7 @@ export default function SideNav() {
         {(threadData || isSignedIn) && (
           <button
             onClick={handleNewChat}
-            className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white/80 text-sm transition-all cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 rounded-full bg-(--surface-subtle) hover:bg-(--surface-muted) text-(--text-muted) hover:text-(--foreground) text-sm transition-all cursor-pointer"
             title="New Chat"
           >
             <PencilSquareIcon className="w-4 h-4" />
@@ -77,14 +77,14 @@ export default function SideNav() {
         {/* Thread list for auth users */}
         {isSignedIn && (
           <div className="flex-1 overflow-y-auto flex flex-col gap-0.5">
-            <p className="px-3 pb-1 text-xs font-medium text-white/25 uppercase tracking-wider">History</p>
+            <p className="px-3 pb-1 text-xs font-medium text-(--text-subtle) uppercase tracking-wider">History</p>
             {fetchThreadsLoading ? (
               <div className="flex flex-col gap-0.5">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg">
-                    <div className="w-3.5 h-3.5 rounded bg-white/10 shrink-0 animate-pulse" />
+                    <div className="w-3.5 h-3.5 rounded bg-(--surface-muted) shrink-0 animate-pulse" />
                     <div
-                      className="h-3 rounded bg-white/10 animate-pulse"
+                      className="h-3 rounded bg-(--surface-muted) animate-pulse"
                       style={{ width: `${55 + (i % 3) * 15}%` }}
                     />
                   </div>
@@ -96,8 +96,8 @@ export default function SideNav() {
                   key={t.thread_id}
                   className={`group flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
                     threadData?.thread_id === t.thread_id
-                      ? "bg-white/10 text-white"
-                      : "text-white/50 hover:bg-white/5 hover:text-white/80"
+                      ? "bg-(--surface-muted) text-(--foreground)"
+                      : "text-(--text-muted) hover:bg-(--surface-subtle) hover:text-(--foreground)"
                   }`}
                 >
                   <button
@@ -109,7 +109,7 @@ export default function SideNav() {
                   </button>
                   <button
                     onClick={() => dispatch(setDeleteThreadId(t.thread_id))}
-                    className="shrink-0 opacity-0 group-hover:opacity-100 text-white/30 hover:text-red-400 transition-all cursor-pointer"
+                    className="shrink-0 opacity-0 group-hover:opacity-100 text-(--text-subtle) hover:text-red-400 transition-all cursor-pointer"
                   >
                     <TrashIcon className="w-3.5 h-3.5" />
                   </button>
@@ -121,7 +121,7 @@ export default function SideNav() {
 
         {/* Auth buttons for mobile unauthenticated users */}
         {!isSignedIn && (
-          <div className="md:hidden mt-auto flex flex-col gap-2 pt-4 border-t border-white/5">
+          <div className="md:hidden mt-auto flex flex-col gap-2 pt-4 border-t border-(--border-subtle)">
             <button
               onClick={() => { dispatch(setSignUp(true)); dispatch(setSideNavOpen(false)); }}
               className="w-full px-4 py-2 rounded-full text-sm font-medium bg-[#19c37d] hover:bg-[#17b371] text-white transition-all cursor-pointer"
@@ -130,7 +130,7 @@ export default function SideNav() {
             </button>
             <button
               onClick={() => { dispatch(setSignIn(true)); dispatch(setSideNavOpen(false)); }}
-              className="w-full px-4 py-2 rounded-full text-sm font-medium border border-white/20 hover:border-white/40 text-white/70 hover:text-white transition-all cursor-pointer"
+              className="w-full px-4 py-2 rounded-full text-sm font-medium border border-(--border-muted) hover:border-(--border-muted) text-(--text-muted) hover:text-(--foreground) transition-all cursor-pointer"
             >
               Sign In
             </button>

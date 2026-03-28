@@ -58,10 +58,10 @@ export default function SharedPage() {
 
   if (loading) {
     return (
-      <div ref={containerRef} className="fixed left-0 right-0 top-0 z-[60] bg-[#212121] flex items-center justify-center" style={{ height: "100dvh" }}>
+      <div ref={containerRef} className="fixed left-0 right-0 top-0 z-[60] bg-(--background) flex items-center justify-center" style={{ height: "100dvh" }}>
         <div className="flex flex-col items-center gap-3">
           <div className="w-6 h-6 border-2 border-[#19c37d]/30 border-t-[#19c37d] rounded-full animate-spin" />
-          <p className="text-white/40 text-sm">Loading conversation…</p>
+          <p className="text-(--text-subtle) text-sm">Loading conversation…</p>
         </div>
       </div>
     );
@@ -69,9 +69,9 @@ export default function SharedPage() {
 
   if (error || !data) {
     return (
-      <div ref={containerRef} className="fixed left-0 right-0 top-0 z-[60] bg-[#212121] flex items-center justify-center" style={{ height: "100dvh" }}>
+      <div ref={containerRef} className="fixed left-0 right-0 top-0 z-[60] bg-(--background) flex items-center justify-center" style={{ height: "100dvh" }}>
         <div className="flex flex-col items-center gap-4 text-center px-6">
-          <p className="text-white/60 text-sm">This conversation could not be found.</p>
+          <p className="text-(--text-muted) text-sm">This conversation could not be found.</p>
           <button
             onClick={() => router.push("/")}
             className="px-4 py-2 rounded-full text-sm font-medium bg-[#19c37d] hover:bg-[#17b371] text-white transition-all cursor-pointer"
@@ -84,13 +84,13 @@ export default function SharedPage() {
   }
 
   return (
-    <div ref={containerRef} className="fixed left-0 right-0 top-0 z-[60] bg-[#212121] flex flex-col" style={{ height: "100dvh" }}>
+    <div ref={containerRef} className="fixed left-0 right-0 top-0 z-[60] bg-(--background) flex flex-col" style={{ height: "100dvh" }}>
       {/* ── Top Nav ── */}
-      <header className="sticky top-0 z-10 flex items-center px-4 sm:px-6 py-3 h-14 shrink-0 gap-3 bg-[#212121] border-b border-white/5">
+      <header className="sticky top-0 z-10 flex items-center px-4 sm:px-6 py-3 h-14 shrink-0 gap-3 bg-(--background) border-b border-(--border-subtle)">
         <div className="shrink-0">
           <SeraLogo />
         </div>
-        <span className="flex-1 text-white/60 text-sm font-medium truncate">
+        <span className="flex-1 text-(--text-muted) text-sm font-medium truncate">
           {data.title || "Shared conversation"}
         </span>
         <button
@@ -115,11 +115,11 @@ export default function SharedPage() {
       </div>
 
       {/* ── CTA Banner ── */}
-      <div className="shrink-0 px-4 py-3 border-t border-white/5 bg-[#212121]">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 px-4 py-2.5 rounded-2xl bg-[#2f2f2f] border border-white/10">
+      <div className="shrink-0 px-4 py-3 border-t border-(--border-subtle) bg-(--background)">
+        <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 px-4 py-2.5 rounded-2xl bg-(--input-bg) border border-(--border-subtle)">
           <div className="flex items-center gap-2 min-w-0">
             <SparklesIcon className="w-4 h-4 text-[#19c37d] shrink-0" />
-            <p className="text-xs sm:text-sm text-white/70 truncate">
+            <p className="text-xs sm:text-sm text-(--text-muted) truncate">
               Start your own conversation with Sera — it&apos;s free.
             </p>
           </div>
